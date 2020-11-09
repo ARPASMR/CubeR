@@ -76,6 +76,7 @@ coverage_get_coordsys <- function(desc_url = NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+## MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -87,7 +88,11 @@ coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
     xml_attr(., "srsName") %>%
     str_split(., "=") %>% unlist
 
-  if(length(sys_Id) > 1){
+  if(length(sys_Id) > 2){
+    sys_Id <- sys_Id  %>% .[3] %>%
+      str_split(.,"/") %>% unlist %>% .[8] %>%
+      str_split(.,"&") %>% unlist %>% .[1]
+  } else if(length(sys_Id) > 1){
     sys_Id <- sys_Id  %>% .[2] %>%
       str_split(.,"/") %>% unlist %>% .[8] %>%
       str_split(.,"&") %>% unlist %>% .[1]
