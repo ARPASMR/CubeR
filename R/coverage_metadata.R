@@ -7,7 +7,7 @@
 getCapability <-function(url=NULL){
 
   if(is.null(url)){
-    url = "http://saocompute.eurac.edu/rasdaman/ows"
+    url = "http://10.10.0.28:8081/rasdaman/ows"
   }
 
   urlp<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCapabilities")
@@ -28,7 +28,7 @@ getCapability <-function(url=NULL){
 
 createWCS_URLs<-function(url=NULL,type){
 
-  if(is.null(url))url = "http://saocompute.eurac.edu/rasdaman/ows"
+  if(is.null(url))url = "http://10.10.0.28:8081/rasdaman/ows"
 
   urlsmall<-str_split(url,"/")[[1]]
   urlsmall<-paste(urlsmall[1:3],"/",collapse = "") %>% str_replace_all(.," ","")
