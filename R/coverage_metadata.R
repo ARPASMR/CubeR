@@ -116,6 +116,7 @@ coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split str_replace_all
 #' @export
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -126,8 +127,8 @@ coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
     xml_children(.) %>% .[1] %>%
     xml_children(.) %>% xml_children(.)
 
-  tmp_ext = c(str_split(xml_text(t_extent[1]), " ") %>% unlist() %>% .[3] %>% str_replace_all(., "\"", ""),
-              str_split(xml_text(t_extent[2]), " ") %>% unlist() %>% .[3] %>% str_replace_all(., "\"", "")
+  tmp_ext = c(str_split(xml_text(t_extent[1]), " ") %>% unlist() %>% .[1] %>% str_replace_all(., "\"", ""),
+              str_split(xml_text(t_extent[2]), " ") %>% unlist() %>% .[1] %>% str_replace_all(., "\"", "")
   )
 
   return(tmp_ext)
@@ -144,6 +145,7 @@ coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -154,10 +156,10 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
     xml_children(.) %>% .[1] %>%
     xml_children(.) %>% xml_children(.)
 
-  s_extent_xmin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[1]
-  s_extent_xmax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[1]
-  s_extent_ymin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[2]
-  s_extent_ymax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[2]
+  s_extent_xmin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[2]
+  s_extent_xmax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[2]
+  s_extent_ymin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[3]
+  s_extent_ymax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[3]
 
   BB <- c(s_extent_xmin, s_extent_xmax, s_extent_ymin, s_extent_ymax)
 
