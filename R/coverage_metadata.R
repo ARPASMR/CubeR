@@ -177,6 +177,7 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+#DA MODIFICARE!
 coverage_get_timestamps <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -232,13 +233,14 @@ coverage_get_resolution <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
 
-  r_xml = xml2::read_xml(paste0(desc_url,coverage))
+  r_xml <- read_xml(paste0(desc_url,coverage))
 
-  resolution = xml2::xml_find_all(r_xml, ".//wcs:CoverageDescription") %>%
-    xml_children(.) %>% .[5] %>%
-    xml_children() %>%  xml_children() %>% .[4] %>%
-    xml_children() %>%  xml_children() %>% .[1] %>%
-    xml_text() %>% str_split(.," ") %>% unlist() %>% .[1] %>%
+  resolution <- xml_find_all(r_xml, ".//wcs:CoverageDescription") %>%
+    xml2::xml_children(.) %>% .[5] %>%
+    xml_children(.) %>% xml_children(.) %>% .[6] %>%
+    xml_children(.) %>% xml_children(.) %>%
+    xml_text(.) %>% str_replace_all(., "\"", "") %>%
+    str_split(.," ") %>% unlist() %>% .[3] %>%
     as.numeric() %>% abs()
 
   return(resolution)
