@@ -204,6 +204,7 @@ coverage_get_timestamps <- function(desc_url=NULL, coverage){
 #' @importFrom magrittr "%>%"
 #' @export
 
+#DA MODIFICARE!
 coverage_get_bands <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -229,6 +230,7 @@ coverage_get_bands <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+# MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_resolution <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
