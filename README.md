@@ -1,7 +1,6 @@
 # CubeR - ARPASMR
 
 Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone i servizi OGC
-
 Repository modificato a partire dal repository clonato [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
 
 ## Install
@@ -13,3 +12,4 @@ The package can be directly imported in R by typing:
 library(devtools)
 devtools::install_github("ARPASMR/myCubeR", ref = "ARPASMR")
 ```
+Nota bene: Scaricare il pacchetto non in VPN.
