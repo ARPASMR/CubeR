@@ -11,5 +11,5 @@ The package can be directly imported in R by typing:
 
 ```r
 library(devtools)
-devtools::install_github("ARPASMR/myCubeR:ARPASMR", ref = "ARPASMR")
+devtools::install_github("ARPASMR/myCubeR", ref = "ARPASMR")
 ```
