@@ -19,7 +19,7 @@
 #' @importFrom sp CRS
 #' @importFrom urltools url_encode
 #' @export
-image_from_coverage <- function(coverage, slice_E, slice_N, date,
+image_from_coverage <- function(coverage, slice_E, slice_N, dataa,
                                 res_eff=1, format="TIFF", bands=NULL,filename=NULL,
                                 query_url=NULL){
 
@@ -33,11 +33,12 @@ image_from_coverage <- function(coverage, slice_E, slice_N, date,
 
   for(i in 1:bands_len){
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
     query <- paste0('for c in (', coverage, ') return encode (c.', bands[i],
                     '[',
-                    coord_sys[1], '(', slice_E[1], ':', slice_E[2], ')', ',',
-                    coord_sys[2], '(', slice_N[1], ':', slice_N[2], ')', ',',
-                    coord_sys[3], '("', date, '")',
+                    coord_sys[2], '(', slice_E[1], ':', slice_E[2], ')', ',',
+                    coord_sys[3], '(', slice_N[1], ':', slice_N[2], ')', ',',
+                    coord_sys[1], '("', dataa, '")',
                     '],',
                     '"image/',tolower(format),'"',')')
 
