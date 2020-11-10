@@ -55,14 +55,14 @@ coverage_get_coordsys <- function(desc_url = NULL, coverage){
 
   desc_xml = xml2::read_xml(paste0(desc_url,coverage))
 
-  coord_sys = xml2::xml_find_all(desc_xml, ".//wcs:CoverageDescription") %>%
+  axes = xml2::xml_find_all(desc_xml, ".//wcs:CoverageDescription") %>%
     xml_children(.) %>% .[5] %>%
     xml_children(.) %>%
     xml_children(.) %>% .[2] %>%
     xml_text() %>% str_split(., " ") %>%
     unlist()
 
-  return(coord_sys)
+  return(axes)
 
 }
 
@@ -177,22 +177,21 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
-#DA MODIFICARE!
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_timestamps <- function(desc_url=NULL, coverage){
-
-  if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
-
-  i_xml <- read_xml(paste0(desc_url,coverage))
-
-  av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
+ 
+   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
+ 
+   i_xml <- read_xml(paste0(desc_url,coverage))
+ 
+   av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
     xml2::xml_children(.) %>% .[5] %>%
-    xml_children(.) %>% xml_children(.) %>% .[6] %>%
+    xml_children(.) %>% xml_children(.) %>%
     xml_children(.) %>% xml_children(.) %>% .[2] %>%
-    xml_text(.) %>% str_replace_all(., "\"", "") %>%
-    str_split(.," ") %>% unlist()
-
-  return(av_img_times)
-
+  	xml_text(.) %>% str_split(.," ") %>% unlist() %>% .[1]
+  
+   return(av_img_times)
+ 
 }
 
 #' @title Get Bands
@@ -204,7 +203,6 @@ coverage_get_timestamps <- function(desc_url=NULL, coverage){
 #' @importFrom magrittr "%>%"
 #' @export
 
-#DA MODIFICARE!
 coverage_get_bands <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
