@@ -7,7 +7,7 @@
 getCapability <-function(url=NULL){
 
   if(is.null(url)){
-    url = "http://10.8.244.147:8080/rasdaman/ows"
+    url = "http://10.10.0.28:8081/rasdaman/ows"
   }
 
   urlp<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCapabilities")
@@ -28,7 +28,7 @@ getCapability <-function(url=NULL){
 
 createWCS_URLs<-function(url=NULL,type){
 
-  if(is.null(url))url = "http://10.8.244.147:8080/rasdaman/ows"
+  if(is.null(url))url = "http://10.10.0.28:8081/rasdaman/ows"
 
   urlsmall<-str_split(url,"/")[[1]]
   urlsmall<-paste(urlsmall[1:3],"/",collapse = "") %>% str_replace_all(.," ","")
@@ -55,14 +55,14 @@ coverage_get_coordsys <- function(desc_url = NULL, coverage){
 
   desc_xml = xml2::read_xml(paste0(desc_url,coverage))
 
-  coord_sys = xml2::xml_find_all(desc_xml, ".//wcs:CoverageDescription") %>%
+  axes = xml2::xml_find_all(desc_xml, ".//wcs:CoverageDescription") %>%
     xml_children(.) %>% .[5] %>%
     xml_children(.) %>%
     xml_children(.) %>% .[2] %>%
     xml_text() %>% str_split(., " ") %>%
     unlist()
 
-  return(coord_sys)
+  return(axes)
 
 }
 
@@ -76,6 +76,7 @@ coverage_get_coordsys <- function(desc_url = NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+## MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -87,7 +88,11 @@ coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
     xml_attr(., "srsName") %>%
     str_split(., "=") %>% unlist
 
-  if(length(sys_Id) > 1){
+  if(length(sys_Id) > 2){
+    sys_Id <- sys_Id  %>% .[3] %>%
+      str_split(.,"/") %>% unlist %>% .[8] %>%
+      str_split(.,"&") %>% unlist %>% .[1]
+  } else if(length(sys_Id) > 1){
     sys_Id <- sys_Id  %>% .[2] %>%
       str_split(.,"/") %>% unlist %>% .[8] %>%
       str_split(.,"&") %>% unlist %>% .[1]
@@ -111,6 +116,7 @@ coverage_get_coordinate_reference <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split str_replace_all
 #' @export
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -121,8 +127,8 @@ coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
     xml_children(.) %>% .[1] %>%
     xml_children(.) %>% xml_children(.)
 
-  tmp_ext = c(str_split(xml_text(t_extent[1]), " ") %>% unlist() %>% .[3] %>% str_replace_all(., "\"", ""),
-              str_split(xml_text(t_extent[2]), " ") %>% unlist() %>% .[3] %>% str_replace_all(., "\"", "")
+  tmp_ext = c(str_split(xml_text(t_extent[1]), " ") %>% unlist() %>% .[1] %>% str_replace_all(., "\"", ""),
+              str_split(xml_text(t_extent[2]), " ") %>% unlist() %>% .[1] %>% str_replace_all(., "\"", "")
   )
 
   return(tmp_ext)
@@ -139,6 +145,7 @@ coverage_get_temporal_extent <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
@@ -149,10 +156,10 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
     xml_children(.) %>% .[1] %>%
     xml_children(.) %>% xml_children(.)
 
-  s_extent_xmin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[1]
-  s_extent_xmax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[1]
-  s_extent_ymin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[2]
-  s_extent_ymax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[2]
+  s_extent_xmin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[2]
+  s_extent_xmax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[2]
+  s_extent_ymin = str_split(xml_text(s_extent[1]), " ") %>% unlist() %>% .[3]
+  s_extent_ymax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[3]
 
   BB <- c(s_extent_xmin, s_extent_xmax, s_extent_ymin, s_extent_ymax)
 
@@ -170,21 +177,21 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+#MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_timestamps <- function(desc_url=NULL, coverage){
-
-  if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
-
-  i_xml <- read_xml(paste0(desc_url,coverage))
-
-  av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
+ 
+   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
+ 
+   i_xml <- read_xml(paste0(desc_url,coverage))
+ 
+   av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
     xml2::xml_children(.) %>% .[5] %>%
-    xml_children(.) %>% xml_children(.) %>% .[6] %>%
+    xml_children(.) %>% xml_children(.) %>%
     xml_children(.) %>% xml_children(.) %>% .[2] %>%
-    xml_text(.) %>% str_replace_all(., "\"", "") %>%
-    str_split(.," ") %>% unlist()
-
-  return(av_img_times)
-
+  	xml_text(.) %>% str_split(.," ") %>% unlist() %>% .[1]
+  
+   return(av_img_times)
+ 
 }
 
 #' @title Get Bands
@@ -221,17 +228,19 @@ coverage_get_bands <- function(desc_url=NULL, coverage){
 #' @importFrom stringr str_split
 #' @export
 
+# MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_resolution <- function(desc_url=NULL, coverage){
 
   if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
 
-  r_xml = xml2::read_xml(paste0(desc_url,coverage))
+  r_xml <- read_xml(paste0(desc_url,coverage))
 
-  resolution = xml2::xml_find_all(r_xml, ".//wcs:CoverageDescription") %>%
-    xml_children(.) %>% .[5] %>%
-    xml_children() %>%  xml_children() %>% .[4] %>%
-    xml_children() %>%  xml_children() %>% .[1] %>%
-    xml_text() %>% str_split(.," ") %>% unlist() %>% .[1] %>%
+  resolution <- xml_find_all(r_xml, ".//wcs:CoverageDescription") %>%
+    xml2::xml_children(.) %>% .[5] %>%
+    xml_children(.) %>% xml_children(.) %>% .[6] %>%
+    xml_children(.) %>% xml_children(.) %>%
+    xml_text(.) %>% str_replace_all(., "\"", "") %>%
+    str_split(.," ") %>% unlist() %>% .[3] %>%
     as.numeric() %>% abs()
 
   return(resolution)

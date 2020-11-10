@@ -4,8 +4,16 @@
 \alias{norm_diff_pixel}
 \title{Calculate Normalized Difference Pixel History}
 \usage{
-norm_diff_pixel(coverage, coords, band1, band2, date = NULL,
-  desc_url = NULL, query_url = NULL, plot = TRUE)
+norm_diff_pixel(
+  coverage,
+  coords,
+  band1,
+  band2,
+  date = NULL,
+  desc_url = NULL,
+  query_url = NULL,
+  plot = TRUE
+)
 }
 \arguments{
 \item{coverage}{name of the coverage [character]}

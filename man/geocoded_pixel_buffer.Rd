@@ -4,8 +4,16 @@
 \alias{geocoded_pixel_buffer}
 \title{Calculate Pixel Buffer History}
 \usage{
-geocoded_pixel_buffer(coverage, coords, band, buffer, date = NULL,
-  filename = "request", query_url = NULL, plot = F)
+geocoded_pixel_buffer(
+  coverage,
+  coords,
+  band,
+  buffer,
+  date = NULL,
+  filename = "request",
+  query_url = NULL,
+  plot = F
+)
 }
 \arguments{
 \item{coverage}{name of the coverage [character]}

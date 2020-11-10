@@ -4,8 +4,17 @@
 \alias{image_from_coverage}
 \title{Get a raster from coverage}
 \usage{
-image_from_coverage(coverage, slice_E, slice_N, date, res_eff = 1,
-  format = "TIFF", bands = NULL, filename = NULL, query_url = NULL)
+image_from_coverage(
+  coverage,
+  slice_E,
+  slice_N,
+  DATA,
+  res_eff = 1,
+  format = "TIFF",
+  bands = NULL,
+  filename = NULL,
+  query_url = NULL
+)
 }
 \arguments{
 \item{coverage}{name of the coverage [character]}
@@ -13,8 +22,6 @@ image_from_coverage(coverage, slice_E, slice_N, date, res_eff = 1,
 \item{slice_E}{image slicing coordinates in x-direction [character]}
 
 \item{slice_N}{image slicing coordinates in y-direction [character]}
-
-\item{date}{an available timestamp [character]}
 
 \item{res_eff}{factor to scale raster resolution [numeric]}
 
@@ -26,6 +33,8 @@ image_from_coverage(coverage, slice_E, slice_N, date, res_eff = 1,
 
 \item{query_url}{Web Coverage Service (WCS) for processing the query.
 This URL can be built with the *createWCS_URLs* function. [character]}
+
+\item{date}{an available timestamp [character]}
 }
 \description{
 This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to

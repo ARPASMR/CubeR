@@ -4,8 +4,16 @@
 \alias{pixel_history}
 \title{Pixel History}
 \usage{
-pixel_history(coverage, coord_sys, bands, coords, date = NULL,
-  desc_url = NULL, query_url = NULL, plot = F)
+pixel_history(
+  coverage,
+  coord_sys,
+  bands,
+  coords,
+  date = NULL,
+  desc_url = NULL,
+  query_url = NULL,
+  plot = F
+)
 }
 \arguments{
 \item{coverage}{name of the coverage [character]}
