@@ -34,7 +34,15 @@ image_from_coverage <- function(coverage, slice_E, slice_N, dataa,
   for(i in 1:bands_len){
 
 #MODIFICATO PER RASDAMAN ARPA LOMBARDIA
-    query <- paste0('for c in (', coverage, ') return encode (c.', bands[i],
+#    query <- paste0('for c in (', coverage, ') return encode (c.', bands[i],
+#                    '[',
+#                    coord_sys[2], '(', slice_E[1], ':', slice_E[2], ')', ',',
+#                    coord_sys[3], '(', slice_N[1], ':', slice_N[2], ')', ',',
+#                    coord_sys[1], '("', dataa, '")',
+#                    '],',
+#                    '"image/',tolower(format),'"',')')
+    
+   query <- paste0('for ', bands[i],' in (', coverage, ') return encode (',bands[i],
                     '[',
                     coord_sys[2], '(', slice_E[1], ':', slice_E[2], ')', ',',
                     coord_sys[3], '(', slice_N[1], ':', slice_N[2], ')', ',',
