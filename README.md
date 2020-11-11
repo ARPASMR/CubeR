@@ -17,12 +17,10 @@ The package automatically builds the WCS/WCPS requests (each function has an aut
 This package offers several possibilities to interact with Data Cubes as listed below.
 
 ```diff
-- text in red
-+ text in green
-! text in orange
-# text in gray
-@@ text in purple (and bold)@@
+@@ SEE THE COMPLETE HTML DOCUMENTATION PROVIDED WITHIN THE PACKAGE IN THE "DOCS" FOLDER @@
 ```
+
+<span style="color:orange; font-size: 40px;">Word up</span>
 
 #### 1. Discovery 
 Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the *GetCapabilities* and the *DescribeCoverage* functionality).
