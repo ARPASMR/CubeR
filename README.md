@@ -16,7 +16,7 @@ The package automatically builds the WCS/WCPS requests (each function has an aut
 This package offers several possibilities to interact with Data Cubes as listed below.
 
 #### 1. Discovery 
-Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the '''''GetCapailities''''' and the '''''DescribeCoverage''''' functionality).
+Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the *GetCapailities* and the *DescribeCoverage* functionality).
 
 All the functions, beginning with `coverage_get_`, are explicitly for retrieving metadata corresponding to each of the coverage.
 
@@ -32,12 +32,12 @@ The queries can perform mathematical and statistical operations between multiple
 
 See [Rasdaman Tutorial - OGS WCPS](https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service) for useful examples and more information.
 
-'''Eg. Get the different values of a pixel over time, get averages, etc..'''
+_Eg. Get the different values of a pixel over time, get averages, etc.._
 
 ### Maintainers
 
 Susanna Grasso
 
 
-<img src="https://www.arpalombardia.it/PublishingImages/logo-ARPA-Lombardia.svg" height="50">
+<img src="https://www.arpalombardia.it/PublishingImages/logo-ARPA-Lombardia.svg" height="70">
 
