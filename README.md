@@ -16,29 +16,28 @@ The package automatically builds the WCS/WCPS requests (each function has an aut
 This package offers several possibilities to interact with Data Cubes as listed below.
 
 #### 1. Discovery 
-Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the `GetCapailities` and the 'DescribeCoverage' functionality).
+Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the '''''GetCapailities''''' and the '''''DescribeCoverage''''' functionality).
 
-All the functions, beginning with **coverage_get_**, are explicitly for retrieving metadata corresponding to each of the coverage.
+All the functions, beginning with `coverage_get_`, are explicitly for retrieving metadata corresponding to each of the coverage.
 
 #### 2. Get the Data
 Get the Data or download the entire or a part of a raster or a subset of a Coverage.
+The specific function `image from coverage` returns easily either an image or a subset of an image.
 
-The specific function **image from coverage** returns easily either an image or a subset of an image.
-
-#### 4 Processing/Performe specific query
+#### 3. Processing/Performe specific query
 
 The package allows to handle every desiderd query (passed in "processing expression" format) translating in WCPS queries and hands them over to the Rasdaman Server.
 
 The queries can perform mathematical and statistical operations between multiple spatial subsets.
 
-See [Rasdaman Tutorial - OGS WCPS] (https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service) for useful examples and more information.
+See [Rasdaman Tutorial - OGS WCPS](https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service) for useful examples and more information.
 
 '''Eg. Get the different values of a pixel over time, get averages, etc..'''
 
-### Manteiners
+### Maintainers
 
 Susanna Grasso
 
 
-<img src="https://www.arpalombardia.it/PublishingImages/logo-ARPA-Lombardia.svg" height="24">
+<img src="https://www.arpalombardia.it/PublishingImages/logo-ARPA-Lombardia.svg" height="50">
 
