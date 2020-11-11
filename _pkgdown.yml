@@ -1,0 +1,32 @@
+development:
+  mode: unreleased
+
+home:
+  links:
+  - text: Browse source code
+    href: https://github.com/ARPASMR/myCubeR
+  - text: Comments and Issues are welcomed
+    href: https://github.com/ARPASMR/myCubeR
+
+navbar:
+  title: "myCubeR"
+  type: inverse
+  left:
+    - icon: fa-home fa-lg
+      href: index.html
+    - text: "Tutorial"
+      menu:
+      - text: "Get Metadata"
+        href: articles/Get_Metadata.html
+      - text: "Get Data"
+        href: articles/Get_Data.html
+      - text: "Process Data"
+        href: articles/Process_Data.html
+    - text: "Functions"
+      href: reference/index.html
+    - text: "Changelog"
+      href: articles/changelog.html
+
+  right:
+    - icon: fa-github fa-lg
+      href: https://github.com/ARPASMR/myCubeR
