@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a raster from coverage — image_from_coverage • myCubeR</title>
+<title>Get WPCS query result — WPCS_query • myCubeR</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Get a raster from coverage — image_from_coverage" />
-<meta property="og:description" content="This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-memory or on the hard drive for further computation." />
+<meta property="og:title" content="Get WPCS query result — WPCS_query" />
+<meta property="og:description" content="This function provides the possibility to interact directly with the data cubes. It gives the option to execute a WPCS query in txt/csv format" />
 
 
 
@@ -130,24 +129,18 @@ memory or on the hard drive for further computation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a raster from coverage</h1>
+    <h1>Get WPCS query result</h1>
     
-    <div class="hidden name"><code>image_from_coverage.Rd</code></div>
+    <div class="hidden name"><code>WPCS_query.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-memory or on the hard drive for further computation.</p>
+    <p>This function provides the possibility to interact directly with the data cubes. It gives the option to execute a WPCS query in txt/csv format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>image_from_coverage</span><span class='op'>(</span>
-  <span class='va'>coverage</span>,
-  <span class='va'>slice_E</span>,
-  <span class='va'>slice_N</span>,
-  <span class='va'>DATA</span>,
-  res_eff <span class='op'>=</span> <span class='fl'>1</span>,
-  format <span class='op'>=</span> <span class='st'>"TIFF"</span>,
-  bands <span class='op'>=</span> <span class='cn'>NULL</span>,
+    <pre class="usage"><span class='fu'>WPCS_query</span><span class='op'>(</span>
+  proper_query <span class='op'>=</span> <span class='cn'>NULL</span>,
+  formato <span class='op'>=</span> <span class='cn'>NULL</span>,
   filename <span class='op'>=</span> <span class='cn'>NULL</span>,
   query_url <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
@@ -156,41 +149,21 @@ memory or on the hard drive for further computation.</p>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>coverage</th>
-      <td><p>name of the coverage [character]</p></td>
+      <th>proper_query</th>
+      <td><p>The proper WPCS query for the selected coverage, in WPCS query language (eg. 'for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01")], "text/csv" )'. The script takes care of encoding it</p></td>
     </tr>
     <tr>
-      <th>slice_E</th>
-      <td><p>image slicing coordinates in x-direction [character]</p></td>
-    </tr>
-    <tr>
-      <th>slice_N</th>
-      <td><p>image slicing coordinates in y-direction [character]</p></td>
-    </tr>
-    <tr>
-      <th>res_eff</th>
-      <td><p>factor to scale raster resolution [numeric]</p></td>
-    </tr>
-    <tr>
-      <th>format</th>
-      <td><p>image format in WCPS query [character]</p></td>
-    </tr>
-    <tr>
-      <th>bands</th>
-      <td><p>coverage bands to calculate raster. Can contain one or more bands from the same coverage [character]</p></td>
+      <th>formato</th>
+      <td><p>output format for the WCPS query result. [character]
+The format coul be image format (image/png, image/tiff, image/jpeg, image/bmp) or text/csv format (text/csv)</p></td>
     </tr>
     <tr>
       <th>filename</th>
-      <td><p>If the raster image should be saved please digit a path and a filename. [character]</p></td>
+      <td><p>downloadfile name (all path)</p></td>
     </tr>
     <tr>
       <th>query_url</th>
-      <td><p>Web Coverage Service (WCS) for processing the query.
-This URL can be built with the *createWCS_URLs* function. [character]</p></td>
-    </tr>
-    <tr>
-      <th>date</th>
-      <td><p>an available timestamp [character]</p></td>
+      <td><p>Web Coverage Service (WCS) for processing the query. This URL can be built with the *createWCS_URLs* function. [character]</p></td>
     </tr>
     </table>
 

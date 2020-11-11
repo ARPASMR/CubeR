@@ -22,7 +22,7 @@ navbar:
         href: articles/Get_Data.html
       - text: "Process Data"
         href: articles/Process_Data.html
-    - text: "Functions"
+    - text: "Funzioni"
       href: reference/index.html
     - text: "Changelog"
       href: articles/changelog.html
