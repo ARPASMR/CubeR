@@ -179,20 +179,47 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
 
 #MODIFICATO PER RASDAMAN ARPA LOMBARDIA
 coverage_get_timestamps <- function(desc_url=NULL, coverage){
+
+  if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
+  
+  i_xml <- read_xml(paste0(desc_url,coverage))
+  
+  av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
+    xml2::xml_children(.) %>% .[5] %>%
+    xml_children(.) %>% xml_children(.) %>% .[4] %>%
+    xml_children(.) %>% xml_children(.) %>% .[2] %>%
+    xml_text(.) %>% str_replace_all(., "\"", "") %>%
+    str_split(.," ") %>% unlist()
+	
+  return(av_img_times)
+}
+
+#' @title Get Number Timestamps
+#' @description Get the number of the available timestamps of WCS, WCPS coverage
+#' @param desc_url Web Coverage Service (WCS) DescribeCoverage url [character]
+#' This URL can be built with the *createWCS_URLs* funtion
+#' @param coverage Name of a coverage [character]
+#' @import xml2
+#' @importFrom magrittr "%>%"
+#' @importFrom stringr str_split
+#' @export
+
+coverage_get_number_timestamps <- function(desc_url=NULL, coverage){
  
    if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
  
    i_xml <- read_xml(paste0(desc_url,coverage))
  
-   av_img_times <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
+   num_timestamp <- xml_find_all(i_xml, ".//wcs:CoverageDescription") %>%
     xml2::xml_children(.) %>% .[5] %>%
     xml_children(.) %>% xml_children(.) %>%
     xml_children(.) %>% xml_children(.) %>% .[2] %>%
   	xml_text(.) %>% str_split(.," ") %>% unlist() %>% .[1]
   
-   return(av_img_times)
+   return(num_timestamp)
  
 }
+
 
 #' @title Get Bands
 #' @description Get the available bands of one WCS, WCPS coverage

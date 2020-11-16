@@ -2,13 +2,12 @@ pandoc: 2.7.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  linking: linking.html
-  metadata: metadata.html
-  pkgdown: pkgdown.html
+  Data_Discovery: Data_Discovery.html
+  Get_Data: Get_Data.html
   search: search.html
   test/jss: jss.pdf
   test/output: output.html
   test/pdf: pdf.pdf
   test/rendering: rendering.html
-last_built: 2020-11-11T23:14Z
+last_built: 2020-11-13T13:20Z
 

@@ -1,4 +1,4 @@
-savefile <- function(response,filename){
+save_file <- function(response,filename){
      bin <- content(response, "raw")
 	 con <- file(filename, open = "wb")
 	 writeBin(bin, con)
@@ -44,15 +44,17 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
 		query_encode  <- urltools::url_encode(query)
 		request       <- paste(query_url, query_encode, collapse = NULL, sep="")
 		res <- GET(request)
-
+		bin <- content(res, "raw")
 		tmp_folder=tempdir()
 		file_name=paste0(coverage,"_",DATA,".tiff")
 		tmp_file=file.path(tmp_folder,file_name)
-		savefile(response=res,filename=tmp_file)
+		con <- file(tmp_file, open = "wb")
+		writeBin(bin, con)
+		close(con)
 		print(paste0("File temporaneo", tmp_file))
 		ras <- raster(tmp_file)
 		if(!is.null(filename)){
-			writeRaster(ras,filename,overwrite=TRUE)
+			writeRaster(ras,filename)
 		} else {
 			return(ras)
 		}
@@ -70,10 +72,17 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
 			query_encode  <- urltools::url_encode(query)
 			request       <- paste(query_url, query_encode, collapse = NULL, sep="")
 			res <- GET(request)
+			bin <- content(res, "raw")
+	
+			#library(RCurl)
+			#bin = getBinaryURL(request)
 			tmp_folder=tempdir()
 			file_name=paste0(coverage,"_",DATA,"[",bands[i],"].tiff")
 			tmp_file=file.path(tmp_folder,file_name)
-            savefile(response=res,filename=tmp_file)
+			con <- file(tmp_file, open = "wb")
+			writeBin(bin, con)
+			close(con)
+			print(paste0("File temporaneo", tmp_file))
 			ras <- raster(tmp_file)
 			rasters[[i]] <- ras
 			#names(stk) <- bands
@@ -81,11 +90,9 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
 			if(!is.null(filename)){
 				stk<-stack(rasters)
 				writeRaster(stk,filename)
-				print(paste0("File salvato come: ", filename))
 				#writeRaster(stk,"myStack.tif", format="GTiff")
 			} else {
 				return(stk)
-				print(paste0("File temporaneo", tmp_file))
 				#nlayers(stk)
 			}
 		}
@@ -105,50 +112,61 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
 #' @import raster
 #' @importFrom urltools url_encode
 #' @export
-
 WPCS_query <- function(proper_query=NULL, ext_format=NULL, filename=NULL, query_url=NULL) {
-  if(is.null(proper_query) || is.null(ext_format)) stop('Inserire per forza i parametri proper_query e formato')
+  if(is.null(proper_query) || is.null(formato)) stop('Inserire per forza i parametri proper_query e formato')
   if(is.null(query_url)) query_url<-createWCS_URLs(type="Query")
   query_encode  <- urltools::url_encode(proper_query)
   request<- paste(query_url, query_encode, collapse = NULL, sep="")
   res <- GET(request)
 
-  tmp_file=paste0(tempfile(),".",ext_format)
-  imageformats=c("png", "jpeg", "bmp")
-  
-  # text/csv format
-	if (ext_format == "txt") {
-		out<- content(res, "text")
-		if (is.null(filename)) {
-			save_file(response=res, filename=filename)
-			return(raster)
-		} else {
-			# Save to local disk
-			save_file(response=res, filename=filename)
-			print(paste0("Risultato salvato in: ", filename))
-		}
+  if(is.null(filename)){
+		tmp_file=paste0(tempfile(),".",ext_format)
+		filename=tmp_file
+  }
+  #text/csv format
+  if (ext_format == "txt") {
+	 out<- content(res, "text")
+	 if (is.null(filename)) {return(out)}
+	 else {save_file}
+	 }
+  } else if (formato == "image/tiff") { 
+   
+
   # raster format
-	} else if (ext_format == "tiff") {
-		savefile(response=res,filename=tmp_file)
-		#print(paste0("File temporaneo", tmp_file))
-		ras <- raster(tmp_file)
-		if (is.null(filename)) {
-			return(ras)
-		} else {
-			writeRaster(ras,filename,overwrite=TRUE)
-			print(paste0("Raster salvato come: ", filename))
-		}
-  #image format
-	} else if (ext_format %in% imageformats){
-		print("Formato immagine")
-		if (is.null(filename)) {
-		savefile(response=res,filename=tmp_file)
-		print(paste0("Immagine salvata nel file temporaneo: ", tmp_file))
-		} else {
-		savefile(response=res,filename=filename)
-        print(paste0("Immagine salvata: ", filename))
-		}
-	} else {
-		stop('Formato non riconosciuto')
-	}
+  } else if (formato == "image/tiff") {
+  
+	 # Save to local disk
+     bin <- content(res, "raw")
+	 con <- file(filename, open = "wb")
+	 writeBin(bin, con)
+	 close(con)
+	 print (paste0("Raster salvato: ",filename))
+    } else if (formato == "image/png") {
+     print("Formato immagine")
+
+	 # library(raster)
+	 # bin = getBinaryURL(request)
+	 # s=raster(bin)
+	 # crs=paste0("+init=epsg:",ref_Id)
+	 # crs(bin) <- CRS(crs)
+     # #crs(bin2) <- CRS("+proj=longlat +datum=WGS84")
+	 # #x <- writeRaster(bin, 'output.tif', overwrite=TRUE)
+	 # x <- writeRaster(s, filename, format="GTiff",overwrite=TRUE)
+	 
+	 # s=raster(filename)
+	 # crs=paste0("+init=epsg:",ref_Id)
+	 # crs(s) <- CRS(crs)
+	 # x <- writeRaster(s, filename, overwrite=TRUE)
+	 # rf <- writeRaster(r, filename=file.path(tmp, "test.tif"), , overwrite=TRUE)
+
+	 ## PLOT
+	# r <- raster(filenamee)
+	# attributeInfo <- iniAttributeInfo()
+	# ainfo<- get(Attribute, attributeInfo)
+	# attUnits = ainfo[2]
+	# plot(r)
+	
+  } else {
+    stop('Formato non riconosciuto')
+  }
 }

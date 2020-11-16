@@ -16,8 +16,8 @@ navbar:
       href: index.html
     - text: "Tutorial"
       menu:
-      - text: "Get Metadata"
-        href: articles/Get_Metadata.html
+      - text: "Data Discovery"
+        href: articles/Data_Discovery.html
       - text: "Get Data"
         href: articles/Get_Data.html
       - text: "Process Data"

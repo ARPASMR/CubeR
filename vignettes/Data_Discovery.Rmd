@@ -1,0 +1,144 @@
+---
+title: "Data Discovery"
+description: >
+  Learn how to set up search for your pkgdown site using 
+  [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data_Discovery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Di seguito vengono illustrate le funzioni che permettono di :
+
+* fornire informazioni sul servizio Rasdaman di ARPA LOMBARDIA (utilizzando la funzione ***GetCapabilities*** del WCS)
+	* `getCapability()`
+
+
+* interrogare i metadati (ottenere descrizione e alcune proprietà) di specifiche Coverage (utilizzando la funzione ***DescribeCoverage*** dei WCS). <br> Fanno parte di queste funzioni:
+	* `coverage_get_bands()`
+	* `coverage_get_bounding_box()`
+	* `coverage_get_coordinate_reference()`
+	* `coverage_get_coordsys()`
+	* `coverage_get_resolution()`
+	* `coverage_get_temporal_extent()`
+	* `coverage_get_timestamps()`
+
+
+## Utilizzare le funzioni implementate
+
+**Importare le librerie**
+
+```r
+library(CubeR)
+library(tibble)
+library(magrittr)
+library(raster)
+```
+
+Richiedere l'elenco delle Coverage/Servizi WCS offerti dal server Rasdaman:
+
+```r
+coverages<-getCapability()
+```
+
+```r
+coverages
+# [1] "rh_ana" 
+```
+
+Scegliere una coverage (in questo caso *rh_ana*):
+
+```r
+coverage<-getCapability()[1]
+```
+
+```r
+coverage
+# [1] "rh_ana" 
+```
+
+
+Per la coverage selezionata (*rh_ana*) è possibile:
+
+Richiedere gli "assi" che descrivono i Datacube (solitamente X,Y e come terza variabile/asse il tempo):
+
+```r
+axes<-coverage_get_coordsys(coverage = coverage)
+```
+
+```r
+axes
+# [1] "ansi" "E"    "N" 
+```
+
+Richiedere il sistema di riferimento della coverage
+
+```r
+ref_sys=coverage_get_coordinate_reference(coverage=coverage
+```
+```r
+ref_sys
+# [1] "32632"
+```
+
+Richiedere "l'estensione temporale" della Coverage
+
+```r
+temp_ext=coverage_get_temporal_extent(coverage=coverage)
+```
+```r
+temp_ext
+# [1] "2020-05-18T12:00:00.000Z" "2020-11-10T06:00:00.000Z"
+```
+
+Richiedere l'entensione (BBOX) spaziale della Coverage
+
+```r
+bb_box=coverage_get_bounding_box(coverage=coverage)
+```
+```r
+bb_box
+# [1] "436000"  "687000"  "4918000" "5167000"
+```
+
+Richiedere la risoluzione spaziale della Coverage
+
+```r
+res=coverage_get_resolution(coverage=coverage)
+```
+```r
+res
+# [1] 1000
+```
+
+Richiedere il nome delle bande (di default per Rasdaman di ARPA LOMBARDIA la variabile principale viene nominata *field_1*. Es per rh_ana corrisponde a......)
+
+```r
+bands<-coverage_get_bands(coverage = coverage)
+```
+```r
+bands
+#[1] "field_1"
+```
+
+Richiedere tutte gli "timestamp" / date per cui sono disponibili i raster che costruiscono il Datacube
+
+```r
+time_stamp=coverage_get_timestamps(coverage=coverage)
+```
+```r
+time_stamp
+#.....................
+
+print(paste("Un totale di",lenght(time_stamp), "dati"))
+#[1] "Un totale di 4133 dati"
+```

@@ -1,0 +1,73 @@
+---
+title: "Get Data"
+description: >
+  Learn how to set up search for your pkgdown site using 
+  [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get_Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+E' possibile scaricare e/o estrarre i Datacube utilizzando utilizzando la funzione della libreria `getCoverage()` (che a sua volta utilizza la funzione ***GetCoverage*** dei servizi WCS).
+
+Vedere l'immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l'analogia con l'interfaccia grafica di Rasdaman.
+
+Attraverso l'utilizzo della funzione `getCoverage()` è possibile scaricare parte di una Coverage (effettuando uno "slicing" del DataCube) in diversi formati (testo: "text/csv"; immagine: es. "image/tiff", "image/png", "image/jpeg"; raster: "image/tif"; netcdf: "application/netcdf").
+
+La funzione è così costruita: 
+
+```r
+getCoverage(coverage, slice_E, slice_N, slice_DATA, FORMAT=NULL, BANDS=NULL, CRS=NULL, filename=NULL, others_opt=NULL)
+```
+
+E' dunque possibile specificare:
+
+- coverage: la coverage che si vuole interrogare/scaricare
+- FORMAT: il formato di restituzione (di default *NULL*: impostato come "image/tiff")
+- slice_E, slice_N, slice_DATA: il "sottinsieme"/taglio della coverage che si vuole ottenere impostando i limiti degli assi *X, Y, data*
+- BANDS: la banda che si vuole interrogare (se non specificato *NULL*: vengono restituite tutte le bande)
+- CRS: il sistema di riferimento con il quale di vuole scaricare il dato (se non specificato *NULL* coincide con il sistema di riferimento principale della coverage)
+- filename: il nome/percorso con cui si vuole eventualmente salvare il risultato
+- others_opt: "altre opzioni" previste dal servizio WCS (es. Clipping). 
+
+	Per maggiori in formazioni sulle opzioni della funnzione GetCoverage:  [OGC WCS - Rasdaman Doc](https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-service)
+
+```html
+ http://10.10.0.28:8081/rasdaman/ows?&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=fwi&SUBSET=ansi("2018-08-01T00:00:00.000Z")))&FORMAT=image/tiff&SUBSETTINGCRS=http://opengis.net/def/crs/EPSG/0/3003&clip=POLYGON((1520000 5030000,1540000 5030000, 1540000 5060000, 1520000 5060000, 1520000 5030000))
+
+ http://10.10.0.28:8081/rasdaman/ows?&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=rh_ana&SUBSET=ansi("2020-05-18T12:00:00.000Z")&FORMAT=image/tiff
+
+ http://10.10.0.28:8081/rasdaman/ows?&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=rh_ana&SUBSET=ansi(%222020-05-18T12:00:00.000Z%22)&SUBSET=E(436500,687000)&FORMAT=application/gml+xml
+```
+
+## ESEMPIO
+http://10.10.0.28:8081/rasdaman/ows?&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=rh_ana&SUBSET=ansi(%222020-05-18T12:00:00.000Z%22)&SUBSET=E(436000)&FORMAT=application/gml+xml
+Estensioni del dominio
+Subset coverage along irregular axis DATE with domain extent from "2014-11-11T00:00:00.000Z" s to "2016-09-25T00:00:00.000Z" s by:
+ trimming from 
+"2014-11-11T00:00:00.000Z"
+ s to 
+"2016-09-25T00:00:00.000Z"
+ s
+ slicing at 
+"2014-11-11T00:00:00.000Z"
+ s
+Subset coverage along regular axis Y with domain extent from 2261160 metre to 2777840 metre by:
+ trimming from 
+2261160
+ metre to 
+2777840
+ metre
+ slicing at 
+2261160
+ metre
+Subset coverage along regular axis X with domain extent from 4065180 metre to 4465980 metre by:
