@@ -16,17 +16,14 @@ navbar:
       href: index.html
     - text: "Tutorial"
       menu:
-      - text: "Data Discovery"
-        href: articles/Data_Discovery.html
-      - text: "Get Data"
-        href: articles/Get_Data.html
-      - text: "Process Data"
-        href: articles/Process_Data.html
+      - text: "Esplorazione dei dati"
+        href: articles/Data_Discovery_ita.html
+      - text: "Scaricamento dei dati "
+        href: articles/Get_Data_ita.html
+      - text: "Elaborazione dei dati"
+        href: articles/Process_Data_ita.html
     - text: "Funzioni"
       href: reference/index.html
-    - text: "Changelog"
-      href: articles/changelog.html
-
   right:
     - icon: fa-github fa-lg
       href: https://github.com/ARPASMR/myCubeR

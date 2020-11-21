@@ -2,12 +2,14 @@ pandoc: 2.7.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  Data_Discovery: Data_Discovery.html
-  Get_Data: Get_Data.html
+  Data_Discovery_ita: Data_Discovery_ita.html
+  Get_Data_ita: Get_Data_ita.html
+  myCubeR: myCubeR.html
+  Process_Data_ita: Process_Data_ita.html
   search: search.html
   test/jss: jss.pdf
   test/output: output.html
   test/pdf: pdf.pdf
   test/rendering: rendering.html
-last_built: 2020-11-13T13:20Z
+last_built: 2020-11-21T23:33Z
 

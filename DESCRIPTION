@@ -3,7 +3,6 @@ Package: myCubeR
 Title: Customization of the R-package "CubeR" (Author Mattia Rossi, mattia.rossi@eurac.edu) to access to 'ARPA LOMBARDIA Rasdaman database' via WCS and WCPS queries
 Version: 1.0.0
 Authors@R: c(
-  person("Mattia", "Rossi", email="mattia.rossi@eurac.edu", role=c("aut", "cre")),
   person("Susanna", "Grasso", email="s.grasso@arpalombardia.it", role="aut"))
 Description: This package provides core functionalities 
   to access data cubes or geospatial timeseries with WCS and WCPS queries. 
@@ -30,5 +29,6 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Suggests: 
-    knitr
+    knitr,
+    rmarkdown
 VignetteBuilder: knitr

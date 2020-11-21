@@ -5,9 +5,118 @@ savefile <- function(response,filename){
 	 close(con)
 }
 
+CRS_Ext <- function(desc_url=NULL, coverage){
+
+  if(is.null(desc_url)) desc_url<-createWCS_URLs(type="Meta")
+
+  d_xml <- xml2::read_xml(paste0(desc_url,coverage))
+
+  sys_Id <- xml_children(d_xml) %>%
+    xml_children(.) %>% xml_children(.) %>% .[1] %>%
+    xml_attr(., "srsName") %>%
+    str_split(., "=") %>% unlist
+
+  if(length(sys_Id) > 2){
+    sys_ext <- sys_Id  %>% .[3]
+  } else if(length(sys_Id) > 1){
+    sys_ext <- sys_Id  %>% .[2]
+  } else {
+    sys_ext <- sys_Id  %>% .[1]
+  }
+  return(sys_ext)
+}
+
+filename_extension <- function(formato){
+  formats=c("text/csv", "image/tiff", "image/png", "image/jpeg", "image/bmp")
+  extensions=c("txt", "tiff", "png", "jpeg", "bmp")
+  i <- which(formats == formato)
+  return (extensions[i])
+}
+
+#' @title GetCoverage
+#' @description This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation.
+#' @param coverage name of the coverage [character]
+#' @param FORMAT output_format. Output format (mime type) of the product
+#' @param DATA an available timestamp [character]
+#' @param slice_E image slicing coordinates in x-direction [character]  Eg. E(436000, 550000)
+#' @param slice_N image slicing coordinates in y-direction [character]  Eg. N(4918000,5166000) 
+#' @param BAND (RangeSubset) coverage Nameband to calculate raster. If param BAND not set (=NULL) the band number 1 will be automatically selected. [character]
+#' @param CRS_Extension This parameter defines the output crs. By default is used the coverages CRS. [character] Eg. http://localhost:8080/def/crs/EPSG/0/32632
+#' @param filename If the raster image should be saved please digit a path and a filename. [character]
+#' @param others_opt Other options/WCS GetCoverage parameters. Eg. clipping extension: clip=POLYGON((1520000 5030000,1540000 5030000, 1540000 5060000, 1520000 5060000, 1520000 5030000))
+#' @import httr
+#' @import tiff
+#' @importFrom raster raster extent aggregate stack writeRaster
+#' @importFrom urltools url_encode
+#' @export
+get_coverage <- function(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, BAND=NULL, CRS_Extension=NULL, filename=NULL, others_opt=NULL)
+{
+  if(is.null(DATA) || is.null(FORMAT)) stop('Inserire per forza i parametri DATA e FORMAT')
+  ext_format=filename_extension(FORMAT)
+  if (length(ext_format)==0) stop ('Verifica il formato inserito')
+  
+  bbox=coverage_get_bounding_box(coverage=coverage)
+  if(is.null(CRS_Extension)) {
+	CRS_Extension <- CRS_Ext(coverage=coverage)
+	print(paste0('Il sistema di riferimento di default è: ',CRS_Extension))
+  }
+  
+  desc_url<-createWCS_URLs(type="Get")
+  coord_sys<-coverage_get_coordsys(coverage=coverage)
+  request <- paste0(desc_url,coverage,'&SUBSET=',coord_sys[1],'(%22', DATA, '%22)','&subsettingCRS=',CRS_Extension,'&FORMAT=',FORMAT)
+
+  # if (is.null(SUBSET_E)) SUBSET_E<-paste0('E(',bbox[1],',',bbox[2],')')
+  # if (is.null(SUBSET_N)) SUBSET_N<-paste0('N(',bbox[3],',',bbox[4],')')
+  if (!is.null(SUBSET_E)) request=paste0(request,'&SUBSET=',SUBSET_E)
+  if (!is.null(SUBSET_N)) request=paste0(request,'&SUBSET=',SUBSET_N)
+  if(!is.null(BAND)) request=paste0(ulr1,'&RANGESUBSET=',BAND)
+  if(!is.null(others_opt)) request=paste0(request,'&',others_opt)
+  
+  #print(request) #Messaggio di controllo
+  res <- GET(request)
+
+  imageformats=c("image/png", "image/jpeg", "image/bmp")
+  tmp_file=paste0(tempfile(),".",ext_format)
+  
+  # text/csv format
+	if (FORMAT == "text/csv") {
+		out<- content(res, "text")
+		if (is.null(filename)) {
+			return(out)
+		} else {
+			# Save to local disk
+			savefile(response=res, filename=filename)
+			print(paste0("Risultato salvato in: ", filename))
+		}
+  # raster format
+	} else if (FORMAT=="image/tiff") {
+		savefile(response=res,filename=tmp_file)
+		#print(paste0("File temporaneo", tmp_file))
+		ras <- raster(tmp_file)
+		if (is.null(filename)) {
+			return(ras)
+		} else {
+			writeRaster(ras,filename,overwrite=TRUE)
+			print(paste0("Raster salvato come: ", filename))
+		}
+  #image format
+	} else if (FORMAT %in% imageformats){
+		print("Formato immagine")
+		if (is.null(filename)) {
+		savefile(response=res,filename=tmp_file)
+		print(paste0("Immagine salvata nel file temporaneo: ", tmp_file))
+		} else {
+		savefile(response=res,filename=filename)
+        print(paste0("Immagine salvata: ", filename))
+		}
+	} else {
+		stop('Formato non riconosciuto')
+	}
+}
+  
+  
 #' @title Image from coverage
-#' @description This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-#' memory or on the hard drive for further computation.
+#' @description This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation.
 #' @param coverage name of the coverage [character]
 #' @param slice_E image slicing coordinates in x-direction [character]
 #' @param slice_N image slicing coordinates in y-direction [character]
@@ -21,10 +130,10 @@ savefile <- function(response,filename){
 #' @importFrom raster raster extent aggregate stack writeRaster
 #' @importFrom urltools url_encode
 #' @export
-image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,filename=NULL, query_url=NULL)
+image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL, filename=NULL, query_url=NULL)
 {
   if(is.null(query_url)) query_url<-createWCS_URLs(type="Query")
-  ref_Id<-coverage_get_coordinate_reference(coverage=coverage)
+  
   coord_sys<-coverage_get_coordsys(coverage=coverage)
   if(is.null(bands)){
     bands=coverage_get_bands(desc_url=NULL, coverage)
@@ -41,8 +150,9 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
                     coord_sys[3], '(', slice_N[1], ':', slice_N[2], ')', ',',
                     coord_sys[1], '("', DATA, '")',
                     '],','"image/tiff")')
+					
 		query_encode  <- urltools::url_encode(query)
-		request       <- paste(query_url, query_encode, collapse = NULL, sep="")
+		request       <- paste0(query_url, query_encode, collapse = NULL, sep="")
 		res <- GET(request)
 
 		tmp_folder=tempdir()
@@ -68,7 +178,7 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
                     '],','"image/tiff")')
     
 			query_encode  <- urltools::url_encode(query)
-			request       <- paste(query_url, query_encode, collapse = NULL, sep="")
+			request       <- paste0(query_url, query_encode, collapse = NULL, sep="")
 			res <- GET(request)
 			tmp_folder=tempdir()
 			file_name=paste0(coverage,"_",DATA,"[",bands[i],"].tiff")
@@ -106,29 +216,32 @@ image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL,fil
 #' @importFrom urltools url_encode
 #' @export
 
-WPCS_query <- function(proper_query=NULL, ext_format=NULL, filename=NULL, query_url=NULL) {
-  if(is.null(proper_query) || is.null(ext_format)) stop('Inserire per forza i parametri proper_query e formato')
+WPCS_query <- function(proper_query=NULL, FORMAT, filename=NULL, query_url=NULL) {
+  if(is.null(proper_query) || is.null(FORMAT)) stop('Inserire per forza i parametri proper_query e formato')
+  ext_format=filename_extension(FORMAT)
+  if (length(ext_format)==0) stop ('Verifica il formato inserito')
+  
   if(is.null(query_url)) query_url<-createWCS_URLs(type="Query")
+  
   query_encode  <- urltools::url_encode(proper_query)
   request<- paste(query_url, query_encode, collapse = NULL, sep="")
   res <- GET(request)
 
+  imageformats=c("image/png", "image/jpeg", "image/bmp")
   tmp_file=paste0(tempfile(),".",ext_format)
-  imageformats=c("png", "jpeg", "bmp")
   
   # text/csv format
-	if (ext_format == "txt") {
+	if (FORMAT == "text/csv") {
 		out<- content(res, "text")
 		if (is.null(filename)) {
-			save_file(response=res, filename=filename)
-			return(raster)
+			return(out)
 		} else {
 			# Save to local disk
-			save_file(response=res, filename=filename)
+			savefile(response=res, filename=filename)
 			print(paste0("Risultato salvato in: ", filename))
 		}
   # raster format
-	} else if (ext_format == "tiff") {
+	} else if (FORMAT=="image/tiff") {
 		savefile(response=res,filename=tmp_file)
 		#print(paste0("File temporaneo", tmp_file))
 		ras <- raster(tmp_file)
@@ -139,7 +252,7 @@ WPCS_query <- function(proper_query=NULL, ext_format=NULL, filename=NULL, query_
 			print(paste0("Raster salvato come: ", filename))
 		}
   #image format
-	} else if (ext_format %in% imageformats){
+	} else if (FORMAT %in% imageformats){
 		print("Formato immagine")
 		if (is.null(filename)) {
 		savefile(response=res,filename=tmp_file)

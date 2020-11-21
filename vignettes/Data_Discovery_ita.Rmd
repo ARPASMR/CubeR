@@ -1,5 +1,5 @@
 ---
-title: "Data Discovery"
+title: "Esplorazione dei dati"
 description: >
   Learn how to set up search for your pkgdown site using 
   [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Introduzione
 Di seguito vengono illustrate le funzioni che permettono di :
 
 * fornire informazioni sul servizio Rasdaman di ARPA LOMBARDIA (utilizzando la funzione ***GetCapabilities*** del WCS)

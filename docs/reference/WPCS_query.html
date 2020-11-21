@@ -92,21 +92,18 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Data_Discovery.html">Data Discovery</a>
+      <a href="../articles/Data_Discovery_ita.html">Esplorazione dei dati</a>
     </li>
     <li>
-      <a href="../articles/Get_Data.html">Get Data</a>
+      <a href="../articles/Get_Data_ita.html">Scaricamento dei dati </a>
     </li>
     <li>
-      <a href="../articles/Process_Data.html">Process Data</a>
+      <a href="../articles/Process_Data_ita.html">Elaborazione dei dati</a>
     </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Funzioni</a>
-</li>
-<li>
-  <a href="../articles/changelog.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -138,12 +135,7 @@
     <p>This function provides the possibility to interact directly with the data cubes. It gives the option to execute a WPCS query in txt/csv format</p>
     </div>
 
-    <pre class="usage"><span class='fu'>WPCS_query</span><span class='op'>(</span>
-  proper_query <span class='op'>=</span> <span class='cn'>NULL</span>,
-  formato <span class='op'>=</span> <span class='cn'>NULL</span>,
-  filename <span class='op'>=</span> <span class='cn'>NULL</span>,
-  query_url <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>WPCS_query</span><span class='op'>(</span>proper_query <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>FORMAT</span>, filename <span class='op'>=</span> <span class='cn'>NULL</span>, query_url <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,17 +145,17 @@
       <td><p>The proper WPCS query for the selected coverage, in WPCS query language (eg. 'for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01")], "text/csv" )'. The script takes care of encoding it</p></td>
     </tr>
     <tr>
-      <th>formato</th>
-      <td><p>output format for the WCPS query result. [character]
-The format coul be image format (image/png, image/tiff, image/jpeg, image/bmp) or text/csv format (text/csv)</p></td>
-    </tr>
-    <tr>
       <th>filename</th>
       <td><p>downloadfile name (all path)</p></td>
     </tr>
     <tr>
       <th>query_url</th>
       <td><p>Web Coverage Service (WCS) for processing the query. This URL can be built with the *createWCS_URLs* function. [character]</p></td>
+    </tr>
+    <tr>
+      <th>ext_format</th>
+      <td><p>output format for the WCPS query result. [character]
+The format coul be raster format ("tiff"), image format ("png", "jpeg", "bmp") or text/csv format ("txt", "csv").</p></td>
     </tr>
     </table>
 
@@ -179,7 +171,7 @@ The format coul be image format (image/png, image/tiff, image/jpeg, image/bmp) o
 
       <footer>
       <div class="copyright">
-  <p>Developed by Mattia Rossi, Susanna Grasso.</p>
+  <p>Developed by Susanna Grasso.</p>
 </div>
 
 <div class="pkgdown">

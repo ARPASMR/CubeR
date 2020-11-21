@@ -1,0 +1,58 @@
+---
+title: "Scaricamento dei dati"
+description: >
+  Learn how to set up search for your pkgdown site using 
+  [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get_Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduzione
+E' possibile scaricare e/o estrarre i Datacube utilizzando utilizzando la funzione della libreria `get_coverage()` (che a sua volta utilizza la funzione *GetCoverage* dei servizi WCS).
+
+Vedere l'immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l'analogia con l'interfaccia grafica di Rasdaman.
+
+Attraverso l'utilizzo della funzione `get_coverage()` è possibile scaricare parte di una Coverage (effettuando uno "slicing" del DataCube) in diversi formati:
+* testo: "text/csv"
+* raster: "image/tif"
+* immagine: es. "image/tiff", "image/png", "image/jpeg"
+
+La funzione è così costruita: 
+
+```r
+get_coverage(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, BAND=NULL, CRS_Extension=NULL, filename=NULL, others_opt=NULL)
+```
+
+E' dunque possibile specificare:
+
+- coverage: la coverage che si vuole interrogare/scaricare
+- DATA: una data per cui si sta interrogando la coverage
+- FORMAT: il formato di restituzione del dato. Per come impostato il formato può essere: "text/csv" (forato testo), "image/tiff" (formato raster), oppure "image/png", "image/jpeg", "image/bmp" (formati immagine)
+- slice_E, slice_N: il "sottinsieme"/taglio della coverage che si vuole ottenere impostando i limiti degli assi *E/X, N/Y*
+- BAND: la banda che si vuole interrogare
+- CRS_Extension: il sistema di riferimento con il quale di vuole scaricare il dato (se non specificato *NULL* coincide con il sistema di riferimento principale della coverage)
+- filename: il nome/percorso con cui si vuole eventualmente salvare il risultato
+- others_opt: "altre opzioni" previste dal servizio GetCoverage (es. Clipping Extension). 
+
+Per maggiori in formazioni sulle opzioni della funzione GetCoverage:  [OGC WCS - Rasdaman Doc](https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-service)
+
+## ESEMPI
+#### 1. Scaricamento di una parte di un raster determinata da un subset lungo l'asse delle ascisse (E o X)
+```r
+coverage="rh_ana"
+data="2020-05-18T12:00:00.000Z"
+formato="image/tiff"
+nomefile="C:\\Documents\\output\\test.tiff"
+subsetE="E(436000,550000)"
+b=get_coverage(coverage=coverage, DATA=data, FORMAT=formato, filename=nomefile, SUBSET_E=subsetE)
+```

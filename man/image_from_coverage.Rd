@@ -2,15 +2,13 @@
 % Please edit documentation in R/coverage_data.R
 \name{image_from_coverage}
 \alias{image_from_coverage}
-\title{Get a raster from coverage}
+\title{Image from coverage}
 \usage{
 image_from_coverage(
   coverage,
   slice_E,
   slice_N,
   DATA,
-  res_eff = 1,
-  format = "TIFF",
   bands = NULL,
   filename = NULL,
   query_url = NULL
@@ -23,20 +21,15 @@ image_from_coverage(
 
 \item{slice_N}{image slicing coordinates in y-direction [character]}
 
-\item{res_eff}{factor to scale raster resolution [numeric]}
+\item{DATA}{an available timestamp [character]}
 
-\item{format}{image format in WCPS query [character]}
-
-\item{bands}{coverage bands to calculate raster. Can contain one or more bands from the same coverage [character]}
+\item{bands}{coverage bands to calculate raster. Can contain one or more bands from the same coverage [character]. Example for one bands: bands="field_1"- Example for tree bands: bands=("R", "G", "B")}
 
 \item{filename}{If the raster image should be saved please digit a path and a filename. [character]}
 
 \item{query_url}{Web Coverage Service (WCS) for processing the query.
 This URL can be built with the *createWCS_URLs* function. [character]}
-
-\item{date}{an available timestamp [character]}
 }
 \description{
-This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-memory or on the hard drive for further computation.
+This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation.
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a raster from coverage — image_from_coverage • myCubeR</title>
+<title>Image from coverage — image_from_coverage • myCubeR</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Get a raster from coverage — image_from_coverage" />
-<meta property="og:description" content="This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-memory or on the hard drive for further computation." />
+<meta property="og:title" content="Image from coverage — image_from_coverage" />
+<meta property="og:description" content="This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation." />
 
 
 
@@ -93,21 +92,18 @@ memory or on the hard drive for further computation." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/Data_Discovery.html">Data Discovery</a>
+      <a href="../articles/Data_Discovery_ita.html">Esplorazione dei dati</a>
     </li>
     <li>
-      <a href="../articles/Get_Data.html">Get Data</a>
+      <a href="../articles/Get_Data_ita.html">Scaricamento dei dati </a>
     </li>
     <li>
-      <a href="../articles/Process_Data.html">Process Data</a>
+      <a href="../articles/Process_Data_ita.html">Elaborazione dei dati</a>
     </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Funzioni</a>
-</li>
-<li>
-  <a href="../articles/changelog.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -130,14 +126,13 @@ memory or on the hard drive for further computation." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a raster from coverage</h1>
+    <h1>Image from coverage</h1>
     
     <div class="hidden name"><code>image_from_coverage.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to
-memory or on the hard drive for further computation.</p>
+    <p>This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>image_from_coverage</span><span class='op'>(</span>
@@ -145,8 +140,6 @@ memory or on the hard drive for further computation.</p>
   <span class='va'>slice_E</span>,
   <span class='va'>slice_N</span>,
   <span class='va'>DATA</span>,
-  res_eff <span class='op'>=</span> <span class='fl'>1</span>,
-  format <span class='op'>=</span> <span class='st'>"TIFF"</span>,
   bands <span class='op'>=</span> <span class='cn'>NULL</span>,
   filename <span class='op'>=</span> <span class='cn'>NULL</span>,
   query_url <span class='op'>=</span> <span class='cn'>NULL</span>
@@ -168,16 +161,12 @@ memory or on the hard drive for further computation.</p>
       <td><p>image slicing coordinates in y-direction [character]</p></td>
     </tr>
     <tr>
-      <th>res_eff</th>
-      <td><p>factor to scale raster resolution [numeric]</p></td>
-    </tr>
-    <tr>
-      <th>format</th>
-      <td><p>image format in WCPS query [character]</p></td>
+      <th>DATA</th>
+      <td><p>an available timestamp [character]</p></td>
     </tr>
     <tr>
       <th>bands</th>
-      <td><p>coverage bands to calculate raster. Can contain one or more bands from the same coverage [character]</p></td>
+      <td><p>coverage bands to calculate raster. Can contain one or more bands from the same coverage [character]. Example for one bands: bands="field_1"- Example for tree bands: bands=("R", "G", "B")</p></td>
     </tr>
     <tr>
       <th>filename</th>
@@ -187,10 +176,6 @@ memory or on the hard drive for further computation.</p>
       <th>query_url</th>
       <td><p>Web Coverage Service (WCS) for processing the query.
 This URL can be built with the *createWCS_URLs* function. [character]</p></td>
-    </tr>
-    <tr>
-      <th>date</th>
-      <td><p>an available timestamp [character]</p></td>
     </tr>
     </table>
 
@@ -206,7 +191,7 @@ This URL can be built with the *createWCS_URLs* function. [character]</p></td>
 
       <footer>
       <div class="copyright">
-  <p>Developed by Mattia Rossi, Susanna Grasso.</p>
+  <p>Developed by Susanna Grasso.</p>
 </div>
 
 <div class="pkgdown">

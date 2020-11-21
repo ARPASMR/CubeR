@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pixel History — pixel_history • myCubeR</title>
+<title>GetCoverage — get_coverage • myCubeR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Pixel History — pixel_history" />
-<meta property="og:description" content="Returns a pixel history of one or multiple bands from one coverage." />
+<meta property="og:title" content="GetCoverage — get_coverage" />
+<meta property="og:description" content="This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation." />
 
 
 
@@ -126,24 +126,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pixel History</h1>
+    <h1>GetCoverage</h1>
     
-    <div class="hidden name"><code>pixel_history.Rd</code></div>
+    <div class="hidden name"><code>get_coverage.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns a pixel history of one or multiple bands from one coverage.</p>
+    <p>This function provides the possibility to interact directly with the data cubes. It gives the option to write the images to memory or on the hard drive for further computation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pixel_history</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>get_coverage</span><span class='op'>(</span>
   <span class='va'>coverage</span>,
-  <span class='va'>coord_sys</span>,
-  <span class='va'>bands</span>,
-  <span class='va'>coords</span>,
-  date <span class='op'>=</span> <span class='cn'>NULL</span>,
-  desc_url <span class='op'>=</span> <span class='cn'>NULL</span>,
-  query_url <span class='op'>=</span> <span class='cn'>NULL</span>,
-  plot <span class='op'>=</span> <span class='cn'>F</span>
+  <span class='va'>DATA</span>,
+  <span class='va'>FORMAT</span>,
+  SUBSET_E <span class='op'>=</span> <span class='cn'>NULL</span>,
+  SUBSET_N <span class='op'>=</span> <span class='cn'>NULL</span>,
+  BAND <span class='op'>=</span> <span class='cn'>NULL</span>,
+  CRS_Extension <span class='op'>=</span> <span class='cn'>NULL</span>,
+  filename <span class='op'>=</span> <span class='cn'>NULL</span>,
+  others_opt <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -154,34 +155,36 @@
       <td><p>name of the coverage [character]</p></td>
     </tr>
     <tr>
-      <th>coord_sys</th>
-      <td><p>coordinate system [character]</p></td>
+      <th>DATA</th>
+      <td><p>an available timestamp [character]</p></td>
     </tr>
     <tr>
-      <th>bands</th>
-      <td><p>coverage bands to calculate and visualize pixel history [character]</p></td>
+      <th>FORMAT</th>
+      <td><p>output_format. Output format (mime type) of the product</p></td>
     </tr>
     <tr>
-      <th>coords</th>
-      <td><p>coordinates of the location of interest in c(Lat,Lon)[character]</p></td>
+      <th>BAND</th>
+      <td><p>(RangeSubset) coverage Nameband to calculate raster. If param BAND not set (=NULL) the band number 1 will be automatically selected. [character]</p></td>
     </tr>
     <tr>
-      <th>date</th>
-      <td><p>date range in format (Ymd) [character]</p></td>
+      <th>CRS_Extension</th>
+      <td><p>This parameter defines the output crs. By default is used the coverages CRS. [character] Eg. http://localhost:8080/def/crs/EPSG/0/32632</p></td>
     </tr>
     <tr>
-      <th>desc_url</th>
-      <td><p>Web Coverage Service (WCS) DescribeCoverage url [character].
-This URL can be built with the *createWCS_URLs* function</p></td>
+      <th>filename</th>
+      <td><p>If the raster image should be saved please digit a path and a filename. [character]</p></td>
     </tr>
     <tr>
-      <th>query_url</th>
-      <td><p>Web Coverage Service (WCS) for processing the query [character].
-This URL can be built with the *createWCS_URLs* function</p></td>
+      <th>others_opt</th>
+      <td><p>Other options/WCS GetCoverage parameters. Eg. clipping extension: clip=POLYGON((1520000 5030000,1540000 5030000, 1540000 5060000, 1520000 5060000, 1520000 5030000))</p></td>
     </tr>
     <tr>
-      <th>plot</th>
-      <td><p>Should the data be plotted [boolean].</p></td>
+      <th>slice_E</th>
+      <td><p>image slicing coordinates in x-direction [character]  Eg. E(436000, 550000)</p></td>
+    </tr>
+    <tr>
+      <th>slice_N</th>
+      <td><p>image slicing coordinates in y-direction [character]  Eg. N(4918000,5166000)</p></td>
     </tr>
     </table>
 

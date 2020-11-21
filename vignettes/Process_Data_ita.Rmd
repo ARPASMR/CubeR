@@ -1,0 +1,43 @@
+---
+title: "Elaborazione dei dati"
+description: >
+  Learn how to set up search for your pkgdown site using 
+  [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get_Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduzione
+Grazie alle funzionalità di Rasdaman e dei Web Coverage Processing Services (WCPS) è possibile richiedere analisi sui Data Cube attarverso query in linguaggio *rasql*.
+
+La funzione in questo pacchetto implementata, `WPCS_query()`, permette, di comporre, inviare e interpretare la richiesta WCPS a partire da una query inserita in linguaggio rasql.
+
+Sono state inoltre realizzate le seguenti funzioni AD HOC per permettere particolari analisi dei dati:
+* pixel_history()
+
+Per maggiori approfondimenti sul servizo WCPS e sulle query:
+* https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service
+* https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps
+
+## Esempi
+#### 1. Esempio1: Testare ritorno di un valore per una coverage per una determinata data e punto
+```r
+query='for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01")], "text/csv")'
+WPCS_query(proper_query=query, FORMAT="text/csv", filename=NULL, query_url=NULL)
+
+#Nel caso in cui volessi salvare il risultato in formato txt:
+nomefile="C:\\Documents\\prova.txt"
+WPCS_query(proper_query=query, FORMAT="text/csv", filename=nomefile, query_url=NULL)
+```
+
+

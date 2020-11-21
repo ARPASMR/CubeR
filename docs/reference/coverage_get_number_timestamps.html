@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pixel History — pixel_history • myCubeR</title>
+<title>Get Number Timestamps — coverage_get_number_timestamps • myCubeR</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Pixel History — pixel_history" />
-<meta property="og:description" content="Returns a pixel history of one or multiple bands from one coverage." />
+<meta property="og:title" content="Get Number Timestamps — coverage_get_number_timestamps" />
+<meta property="og:description" content="Get the number of the available timestamps of WCS, WCPS coverage" />
 
 
 
@@ -126,62 +126,28 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Pixel History</h1>
+    <h1>Get Number Timestamps</h1>
     
-    <div class="hidden name"><code>pixel_history.Rd</code></div>
+    <div class="hidden name"><code>coverage_get_number_timestamps.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Returns a pixel history of one or multiple bands from one coverage.</p>
+    <p>Get the number of the available timestamps of WCS, WCPS coverage</p>
     </div>
 
-    <pre class="usage"><span class='fu'>pixel_history</span><span class='op'>(</span>
-  <span class='va'>coverage</span>,
-  <span class='va'>coord_sys</span>,
-  <span class='va'>bands</span>,
-  <span class='va'>coords</span>,
-  date <span class='op'>=</span> <span class='cn'>NULL</span>,
-  desc_url <span class='op'>=</span> <span class='cn'>NULL</span>,
-  query_url <span class='op'>=</span> <span class='cn'>NULL</span>,
-  plot <span class='op'>=</span> <span class='cn'>F</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>coverage_get_number_timestamps</span><span class='op'>(</span>desc_url <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>coverage</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>coverage</th>
-      <td><p>name of the coverage [character]</p></td>
-    </tr>
-    <tr>
-      <th>coord_sys</th>
-      <td><p>coordinate system [character]</p></td>
-    </tr>
-    <tr>
-      <th>bands</th>
-      <td><p>coverage bands to calculate and visualize pixel history [character]</p></td>
-    </tr>
-    <tr>
-      <th>coords</th>
-      <td><p>coordinates of the location of interest in c(Lat,Lon)[character]</p></td>
-    </tr>
-    <tr>
-      <th>date</th>
-      <td><p>date range in format (Ymd) [character]</p></td>
-    </tr>
-    <tr>
       <th>desc_url</th>
-      <td><p>Web Coverage Service (WCS) DescribeCoverage url [character].
-This URL can be built with the *createWCS_URLs* function</p></td>
+      <td><p>Web Coverage Service (WCS) DescribeCoverage url [character]
+This URL can be built with the *createWCS_URLs* funtion</p></td>
     </tr>
     <tr>
-      <th>query_url</th>
-      <td><p>Web Coverage Service (WCS) for processing the query [character].
-This URL can be built with the *createWCS_URLs* function</p></td>
-    </tr>
-    <tr>
-      <th>plot</th>
-      <td><p>Should the data be plotted [boolean].</p></td>
+      <th>coverage</th>
+      <td><p>Name of a coverage [character]</p></td>
     </tr>
     </table>
 
