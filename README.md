@@ -1,49 +1,31 @@
 # CubeR - ARPASMR
-## An R-package to access Rasdaman data cubes via WCS and WCPS queries.
+## Un pacchetto R per accedere ai Data Cubes archiviati in Rasdaman tramite servizi WCS and WCPS.
 
-This R-Package provides several functions for interacting with databases WCS/WCPS based on OGC standards. We use the [ARPA LOMBARDIA Rasdaman implementation](http://10.10.0.28:8081/rasdaman/ows) in order to host some data in multidimensionla arrays (Data Cubes).
+Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone i servizi OGC.
 
-The package has been modified and adapted from the Repository [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
+Repository modificato a partire dal repository clonato [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
 
-#### Install 
+### Installazione 
 The package can be directly imported in R by typing:
 ```r
 library(devtools)
-devtools::install_github("ARPASMR/myCubeR")
+devtools::install_github("ARPASMR/myCubeR@head")
 ```
 
-The package automatically builds the WCS/WCPS requests (each function has an automatic query handler translating the input in WCS/WCPS requests), hands them over to the Rasdaman Server, parses the XML response from the Rasdaman server and collects the data or the informations desired.
+### Utilizzo e funzionalità
+Questo pacchetto offre le seguenti diverse possibilità per interagire con i Data Cubes:
 
-This package offers several possibilities to interact with Data Cubes as listed below.
+#### 1. Esplorazione dei dati e dei servizi
+E' possibile attraverso l'utilizzo delle funzioni *GetCapability* e *DescribeCoverage* ottenere alcune informazioni sui servizi e sulle coverage disponibili.
+Tutte le funzioni che iniziano con `coverage_get_` permettono di ricavare i metadata corrispondenti ad una coverage specificata.
 
-```diff
-- SEE THE COMPLETE HTML DOCUMENTATION PROVIDED WITHIN THE PACKAGE IN THE "DOCS" FOLDER
-```
+#### 2. Scaricamento dei dati
+La funzione `get_coverage()` permette di scaricare una coverage o parte di essa fruttando la funzione *GetCoverage* dei servizi WCS.
 
-#### 1. Discovery 
-Discover the whole Rasdaman environment and get informationas about specific Coverages/Data Cubes (by calling the *GetCapabilities* and the *DescribeCoverage* functionality).
+E' stata creata poi una funzione particolare `image_from_coverage()` per scaricare in particolare immagini multibanda.
 
-All the functions, beginning with `coverage_get_`, are explicitly for retrieving metadata corresponding to each of the coverage.
+#### 3. Elaborazione dei dati
+La funzione `WPCS_query()` permette di codificare una query passata in formato *rasql* (rasdaman Query Language), comporre l'url per inviare la richiesta del servizio secondo lo standard WCS OGC.
 
-#### 2. Get the Data
-Get the Data or download the entire or a part of a raster or a subset of a Coverage.
-
-The specific function `image from coverage` returns easily either an image or a subset of an image.
-
-#### 3. Processing/Performe specific query
-
-The package allows to handle every desiderd query (passed in *"processing expression"* format) translating in WCPS queries and hands them over to the Rasdaman Server.
-
-The queries can perform mathematical and statistical operations between multiple spatial subsets.
-
-See [Rasdaman Tutorial - OGS WCPS](https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service) for useful examples and more information.
-
-_Eg. Get the different values of a pixel over time, get averages, etc.._
-
-### Maintainers
-
-Susanna Grasso
-
-
-<img src="https://www.arpalombardia.it/PublishingImages/logo-ARPA-Lombardia.svg" height="100">
-
+Altre funzioni di processamento dei dati già implementate:
+- `pixel_history()`
