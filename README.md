@@ -6,12 +6,17 @@ Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone 
 Repository modificato a partire dal repository clonato [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
 
 ### Installazione 
-The package can be directly imported in R by typing:
+Il pacchetto può essere importato in R come segue:
 ```r
 library(devtools)
-devtools::install_github("ARPASMR/myCubeR@head")
+devtools::install_github("ARPASMR/myCubeR@HEAD")
 ```
 
+### Configurazione
+NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasdaman, ora http://10.10.0.28:8081/rasdaman/ows , è necessario aggiornare l'url all'iterno delle funzioni *getCapability* e *createWCS_URLs* definite nello script *R/coverage_metadata.R* .
+
+### Documentazione
+Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, aprire 
 ### Utilizzo e funzionalità
 Questo pacchetto offre le seguenti diverse possibilità per interagire con i Data Cubes:
 
