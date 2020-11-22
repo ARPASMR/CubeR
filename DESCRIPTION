@@ -1,12 +1,11 @@
 Type: Package
 Package: myCubeR
 Title: Customization of the R-package "CubeR" (Author Mattia Rossi, mattia.rossi@eurac.edu) to access to 'ARPA LOMBARDIA Rasdaman database' via WCS and WCPS queries
-Version: 1.0.0
+Version: 0.1.1
 Authors@R: c(
-  person("Susanna", "Grasso", email="s.grasso@arpalombardia.it", role=c("aut", "cre")))
-Description: This package provides core functionalities 
-  to access data cubes or geospatial timeseries with WCS and WCPS queries. 
-  This Packages is tested with the Rasdaman Implementation of ARPA LOMBARDIA.
+  person("Susanna", "Grasso", email="s.grasso@arpalombardia.it", role=c("aut", "cre"))
+  )
+Description: This package provides core functionalities to access data cubes or geospatial timeseries with WCS and WCPS queries. This Packages is tested with the Rasdaman Implementation of ARPA LOMBARDIA.
 License: MIT + file LICENSE
 Imports:
   magrittr,
