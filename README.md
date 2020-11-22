@@ -18,7 +18,8 @@ devtools::install_github("ARPASMR/myCubeR@HEAD")
 NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasdaman, ora http://10.10.0.28:8081/rasdaman/ows , è necessario aggiornare l'url all'iterno delle funzioni *getCapability* e *createWCS_URLs* definite nello script *R/coverage_metadata.R* .
 
 ### Documentazione
-Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, aprire 
+Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, è possibile accedere alla documentazione o attarverso RStudio o aprendo la pagina ***/docs/index.html***.
+
 ### Utilizzo e funzionalità
 Questo pacchetto offre le seguenti diverse possibilità per interagire con i Data Cubes:
 
