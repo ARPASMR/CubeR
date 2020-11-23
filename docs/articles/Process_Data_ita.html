@@ -100,24 +100,113 @@
 <div id="introduzione" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduzione" class="anchor"></a>Introduzione</h2>
-<p>Grazie alle funzionalità di Rasdaman e dei Web Coverage Processing Services (WCPS) è possibile richiedere analisi sui Data Cube attarverso query in linguaggio <em>rasql</em>.</p>
+<p>Grazie alle funzionalità di Rasdaman e dei Web Coverage Processing Services (WCPS) è possibile richiedere analisi sui Data Cube attraverso query in linguaggio <em>rasql</em>.</p>
 <p>La funzione in questo pacchetto implementata, <code><a href="../reference/WPCS_query.html">WPCS_query()</a></code>, permette, di comporre, inviare e interpretare la richiesta WCPS a partire da una query inserita in linguaggio rasql.</p>
-<p>Sono state inoltre realizzate le seguenti funzioni AD HOC per permettere particolari analisi dei dati: * pixel_history()</p>
-<p>Per maggiori approfondimenti sul servizo WCPS e sulle query: * <a href="https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service" class="uri">https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service</a> * <a href="https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps" class="uri">https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps</a></p>
+<p>Sono state inoltre realizzate le seguenti funzioni “ad hoc” per permettere particolari analisi dei dati:</p>
+<ul>
+<li><code><a href="../reference/pixel_history.html">pixel_history()</a></code></li>
+</ul>
+<p>Per maggiori approfondimenti sul servizo WCPS e sulle query:</p>
+<ul>
+<li><a href="https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service" class="uri">https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service</a></li>
+<li><a href="https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps" class="uri">https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps</a></li>
+</ul>
 </div>
-<div id="esempi" class="section level2">
+<div id="librerie-da-importare" class="section level2">
 <h2 class="hasAnchor">
-<a href="#esempi" class="anchor"></a>Esempi</h2>
-<div id="esempio1-testare-ritorno-di-un-valore-per-una-coverage-per-una-determinata-data-e-punto" class="section level4">
-<h4 class="hasAnchor">
-<a href="#esempio1-testare-ritorno-di-un-valore-per-una-coverage-per-una-determinata-data-e-punto" class="anchor"></a>1. Esempio1: Testare ritorno di un valore per una coverage per una determinata data e punto</h4>
+<a href="#librerie-da-importare" class="anchor"></a>Librerie da importare</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">query</span><span class="op">=</span><span class="st">'for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01")], "text/csv")'</span>
-<span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="cn">NULL</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://stringr.tidyverse.org">stringr</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="utilizzo-delle-funzioni-implementate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#utilizzo-delle-funzioni-implementate" class="anchor"></a>Utilizzo delle funzioni implementate</h2>
+<div id="funzione-wcps_query" class="section level3">
+<h3 class="hasAnchor">
+<a href="#funzione-wcps_query" class="anchor"></a>Funzione WCPS_query</h3>
+<p><strong>1. Esempio1: Testare il ritorno di un valore puntuale per una coverage</strong></p>
+<p>1.1 Valore del raster <em>rh_ana</em> alle ore 12.00 del 01/10/2020 in Via Rosellini, Milano (coordinate in WGS84-UTM32N (EPSG:32632) ≈ 515200,5037430)</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">query</span><span class="op">=</span><span class="st">'for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01T12:00:00.000Z")], "text/csv")'</span>
+<span class="va">valore</span><span class="op">=</span><span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="cn">NULL</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
+<span class="va">valore</span>
+<span class="co"># [1] "75.81543"</span>
 
 <span class="co">#Nel caso in cui volessi salvare il risultato in formato txt:</span>
-<span class="va">nomefile</span><span class="op">=</span><span class="st">"C:\\Documents\\prova.txt"</span>
+<span class="va">nomefile</span><span class="op">=</span><span class="st">"C:\\Users\\sgrasso\\Documents\\prova.txt"</span>
 <span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="va">nomefile</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+<p>1.2 Restituzione di tutti i valori in un giorno (01/10/2020) dell’indice rh_ana per una una cella (Via Rosellini Milano, coord. in EPSG32632 ≈ 1515230 , 5037450):</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">query</span><span class="op">=</span><span class="st">'for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01T01:00:00.000Z":"2020-10-02T00:00:00.000Z")], "text/csv")'</span>
+<span class="va">valori</span><span class="op">=</span><span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="cn">NULL</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
+<span class="va">valori</span>
+<span class="co"># &gt; [1] "78.29424,78.10179,77.06179,77.78443,77.91264,78.66537,79.25977,78.66717,78.71285,78.28491,78.76523,75.81543,72.50939,66.867,64.41194,64.49937,65.00713,68.65109,75.54008,80.41253,83.48976,84.73904,86.6781,86.30321"</span>
+
+<span class="co"># Test nel numero di valori estratti</span>
+<span class="co"># lista_valori=unlist(strsplit(valori, ","))</span>
+<span class="co"># length(lista_valori)</span>
+<span class="co"># &gt; [1] 24</span></code></pre></div>
+<p>1.3 Restituzione del valore medio giornalierio (01/10/2020) dell’indice rh_ana per una una cella (Via Rosellini Milano, coord. in EPSG32632 ≈ 1515230 , 5037450)</p>
+<p>Corrisponde alla media dei valori estratti all’esempio precedente 1.2</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">query</span><span class="op">=</span><span class="st">'for c in (rh_ana) return encode(avg(c[E(515200),N(5037430), ansi("2020-10-01T01:00:00.000Z":"2020-10-02T00:00:00.000Z")]), "text/csv")'</span>
+<span class="va">media</span><span class="op">=</span><span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="st">"text/csv"</span>, filename<span class="op">=</span><span class="cn">NULL</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
+<span class="va">media</span>
+<span class="co"># &gt; [1] "76.51809469858806"</span>
+
+<span class="co"># Test che il risultato sia corretto</span>
+<span class="co"># Trasformo gli oggetti della lista, ora stringhe, in valori numerici</span>
+<span class="co"># b=as.numeric(lista_valori) # ovvero: b=as.numeric(unlist(strsplit(valori, ",")))</span>
+<span class="co"># mean(b)</span>
+<span class="co"># &gt; [1] 76.51809</span></code></pre></div>
+<p><strong>2. Esempio2: Restituzione tramite WCPS query di un raster tematizzato</strong></p>
+<p>Oltre che tramite la funzione <code><a href="../reference/get_coverage.html">get_coverage()</a></code>, anche tramite WCPS query è possibile scaricare parti di DataCubes in formto immagine o raster. <br> Nell’esempio proposto si veda la restituzione in formato png dell’indice fwi con un particolare tematismo</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">query</span><span class="op">=</span><span class="st">'for $c in ( fwi ) return encode( switch case $c[ansi("2020-08-01T00:00:00.000Z")]=-9999 return {red:0; green:0; blue:0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]&lt;7 return {red: 46; green: 137; blue: 50}
+case $c[ansi("2020-08-01T00:00:00.000Z")]&gt;=7 and $c[ansi("2020-08-01T00:00:00.000Z")]&lt;10 return {red: 0; green: 255; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]&gt;=10 and $c[ansi("2020-08-01T00:00:00.000Z")]&lt;20 return {red: 255; green: 255; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]&gt;=20 and $c[ansi("2020-08-01T00:00:00.000Z")]&lt;40 return {red: 255; green: 127; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]&gt;=40 return {red: 255; green: 0; blue: 0}
+default return {red: 255; green: 255; blue: 255}, "image/png")'</span>
+
+<span class="va">filename</span><span class="op">=</span><span class="st">"C:\\Users\\sgrasso\\Documents\\fwi_20200810.png"</span>
+<span class="va">formato</span><span class="op">=</span><span class="st">"image/png"</span>
+
+<span class="fu"><a href="../reference/WPCS_query.html">WPCS_query</a></span><span class="op">(</span>proper_query<span class="op">=</span><span class="va">query</span>, FORMAT<span class="op">=</span><span class="va">formato</span>, filename<span class="op">=</span><span class="va">filename</span><span class="op">)</span>
+<span class="co">#[1] "Formato immagine"</span>
+<span class="co">#[1] "Immagine salvata: C:\\Users\\sgrasso\\Documents\\fwi_20200810.png"</span></code></pre></div>
+<p><img src="images/fwi.PNG"></p>
+</div>
+<div id="funzione-pixel_history" class="section level3">
+<h3 class="hasAnchor">
+<a href="#funzione-pixel_history" class="anchor"></a>Funzione pixel_history</h3>
+<p>Serie storica e grafico dei valori dell’indice tm2_ana per un punto (Milano)</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Definizione parametri necessari</span>
+<span class="va">coords</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"515200"</span>, <span class="st">"5037430"</span><span class="op">)</span><span class="op">)</span> <span class="co">#Coordinate di Milano in EPSG 32632 (WGS84 - UTM32N)</span>
+<span class="va">coverage</span><span class="op">=</span><span class="st">"t2m_ana"</span>
+
+<span class="va">coord_sys</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/coverage_get_coordsys.html">coverage_get_coordsys</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span>
+<span class="va">bands</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/coverage_get_bands.html">coverage_get_bands</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span>
+<span class="co"># bands</span>
+<span class="co">#[1] "field_1"</span></code></pre></div>
+<p>Richiamando la funzione con l’opzione Plot = F restituisce in output le righe successive (non il grafico). <br> Non sepcificando inoltre la data (date=NULL) restituisce tutti i valori di tutta la serie storica.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/pixel_history.html">pixel_history</a></span><span class="op">(</span>coverage <span class="op">=</span> <span class="va">coverage</span>, coord_sys <span class="op">=</span> <span class="va">coord_sys</span>, bands <span class="op">=</span> <span class="va">bands</span>, coords <span class="op">=</span> <span class="va">coords</span>, date<span class="op">=</span><span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">F</span><span class="op">)</span>
+<span class="co">#                         Date  field_1</span>
+<span class="co"># 1   2020-05-18T12:00:00.000Z 24.68497</span>
+<span class="co"># 2   2020-05-18T13:00:00.000Z 25.96832</span>
+<span class="co"># 3   2020-05-18T14:00:00.000Z 26.10790</span>
+<span class="co"># 4   2020-05-18T15:00:00.000Z 26.64294</span>
+<span class="co"># 5   2020-05-18T16:00:00.000Z 26.77955</span>
+<span class="co"># ......................</span></code></pre></div>
+<p>Richiamando la funzione con l’opzione Plot = TRUE restituisce il grafico. <br> Di seguito un esempio specificando un intervallo di date: dal 01/09/20 al 01/11/20</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#Test inserimento data inizio e data fine da parte dell'utente con plot grafico</span>
+<span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"2020-09-01"</span>,<span class="st">"2020-11-01"</span><span class="op">)</span> <span class="co"># N.B Il giorno finale è escluso dal conteggio</span>
+<span class="fu"><a href="../reference/pixel_history.html">pixel_history</a></span><span class="op">(</span>coverage <span class="op">=</span> <span class="va">coverage</span>, coord_sys <span class="op">=</span> <span class="va">coord_sys</span>, bands <span class="op">=</span> <span class="va">bands</span>, coords <span class="op">=</span> <span class="va">coords</span>, date <span class="op">=</span> <span class="va">date</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="images/plot.PNG"></p>
 </div>
 </div>
   </div>

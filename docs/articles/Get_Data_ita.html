@@ -100,39 +100,189 @@
 <div id="introduzione" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduzione" class="anchor"></a>Introduzione</h2>
-<p>E’ possibile scaricare e/o estrarre i Datacube utilizzando utilizzando la funzione della libreria <code><a href="../reference/get_coverage.html">get_coverage()</a></code> (che a sua volta utilizza la funzione <em>GetCoverage</em> dei servizi WCS).</p>
-<p>Vedere l’immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l’analogia con l’interfaccia grafica di Rasdaman.</p>
-<p>Attraverso l’utilizzo della funzione <code><a href="../reference/get_coverage.html">get_coverage()</a></code> è possibile scaricare parte di una Coverage (effettuando uno “slicing” del DataCube) in diversi formati: * testo: “text/csv” * raster: “image/tif” * immagine: es. “image/tiff”, “image/png”, “image/jpeg”</p>
-<p>La funzione è così costruita:</p>
+<p>E’ possibile scaricare e/o estrarre i Datacube utilizzando la funzione della libreria <strong><code><a href="../reference/get_coverage.html">get_coverage()</a></code></strong>.</p>
+<p>Tale funzione utilizza la funzione <em>GetCoverage</em> dei servizi WCS (Vedere l’immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l’analogia con l’interfaccia grafica di Rasdaman); per cui è possibile scaricare un raster o parte di esso dichiarando diverse opzioni.</p>
+<p><strong>NB: La funzione implementata in questa libreria non permette lo scaricamento contemporaneo di più raster, ovvero non è possibile inserire un intervallo di date o più bande. Ogni richiesta deve essere fatta per una singola data/ora e per una singola banda; il che corriponde allo scaricamento di un singolo raster.</strong></p>
+<p>Per scaricare invece raster multibanda utilizzare la funzione <strong><code><a href="../reference/image_from_coverage.html">image_from_coverage()</a></code></strong>.</p>
+</div>
+<div id="importazione-delle-librerie-necessarie" class="section level2">
+<h2 class="hasAnchor">
+<a href="#importazione-delle-librerie-necessarie" class="anchor"></a>Importazione delle librerie necessarie</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">myCubeR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="utilizzo-delle-funzioni-implementate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#utilizzo-delle-funzioni-implementate" class="anchor"></a>Utilizzo delle funzioni implementate</h2>
+<div id="utilizzo-della-funzione-get_coverage" class="section level3">
+<h3 class="hasAnchor">
+<a href="#utilizzo-della-funzione-get_coverage" class="anchor"></a>Utilizzo della funzione <code>get_coverage()</code>
+</h3>
+<p>Attraverso l’utilizzo della funzione <code><a href="../reference/get_coverage.html">get_coverage()</a></code> è possibile scaricare parte di una Coverage (effettuando uno “slicing” del DataCube) in diversi formati:</p>
+<ul>
+<li>testo: “text/csv”</li>
+<li>raster: “image/tiff”</li>
+<li>immagine: es. “image/bmp”, “image/png”, “image/jpeg”</li>
+</ul>
+<p>La funzione è così costruita:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span><span class="va">coverage</span>, <span class="va">DATA</span>, <span class="va">FORMAT</span>, SUBSET_E<span class="op">=</span><span class="cn">NULL</span>, SUBSET_N<span class="op">=</span><span class="cn">NULL</span>, BAND<span class="op">=</span><span class="cn">NULL</span>, CRS_Extension<span class="op">=</span><span class="cn">NULL</span>, filename<span class="op">=</span><span class="cn">NULL</span>, others_opt<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span></code></pre></div>
 <p>E’ dunque possibile specificare:</p>
 <ul>
-<li>coverage: la coverage che si vuole interrogare/scaricare</li>
-<li>DATA: una data per cui si sta interrogando la coverage</li>
-<li>FORMAT: il formato di restituzione del dato. Per come impostato il formato può essere: “text/csv” (forato testo), “image/tiff” (formato raster), oppure “image/png”, “image/jpeg”, “image/bmp” (formati immagine)</li>
-<li>slice_E, slice_N: il “sottinsieme”/taglio della coverage che si vuole ottenere impostando i limiti degli assi <em>E/X, N/Y</em>
-</li>
-<li>BAND: la banda che si vuole interrogare</li>
+<li>coverage: il nome della coverage che si vuole interrogare/scaricare [campo obbligatorio]</li>
+<li>DATA: il timestamp d’interesse (data_e_ora) della coverage [campo obbligatorio]</li>
+<li>FORMAT: il formato di restituzione del dato. Per come impostato il formato può essere: “text/csv”, “image/tiff”, “image/png”,“image/jpeg”,“image/bmp” [campo obbligatorio]</li>
+<li>SUBSET_E, SUBSET_N: il subset della coverage che si vuole ottenere impostando i limiti degli assi E e N (X e Y)</li>
+<li>BAND: nome della banda che si vuole interrogare</li>
 <li>CRS_Extension: il sistema di riferimento con il quale di vuole scaricare il dato (se non specificato <em>NULL</em> coincide con il sistema di riferimento principale della coverage)</li>
 <li>filename: il nome/percorso con cui si vuole eventualmente salvare il risultato</li>
-<li>others_opt: “altre opzioni” previste dal servizio GetCoverage (es. Clipping Extension).</li>
+<li>others_opt: ‘altre opzioni’ previste dal servizio GetCoverage (es. Clipping Extension).</li>
 </ul>
 <p>Per maggiori in formazioni sulle opzioni della funzione GetCoverage: <a href="https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-service">OGC WCS - Rasdaman Doc</a></p>
-</div>
-<div id="esempi" class="section level2">
-<h2 class="hasAnchor">
-<a href="#esempi" class="anchor"></a>ESEMPI</h2>
-<div id="scaricamento-di-una-parte-di-un-raster-determinata-da-un-subset-lungo-lasse-delle-ascisse-e-o-x" class="section level4">
+<div id="esempi" class="section level4">
 <h4 class="hasAnchor">
-<a href="#scaricamento-di-una-parte-di-un-raster-determinata-da-un-subset-lungo-lasse-delle-ascisse-e-o-x" class="anchor"></a>1. Scaricamento di una parte di un raster determinata da un subset lungo l’asse delle ascisse (E o X)</h4>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<a href="#esempi" class="anchor"></a>Esempi</h4>
+<p><strong>1. Scaricamento di un raster (intero) specificandone solo la data </strong></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coverage</span><span class="op">=</span><span class="st">"rh_ana"</span>
 <span class="va">data</span><span class="op">=</span><span class="st">"2020-05-18T12:00:00.000Z"</span>
 <span class="va">formato</span><span class="op">=</span><span class="st">"image/tiff"</span>
-<span class="va">nomefile</span><span class="op">=</span><span class="st">"C:\\Documents\\output\\test.tiff"</span>
+<span class="va">r</span><span class="op">=</span><span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span>, DATA<span class="op">=</span><span class="va">data</span>, FORMAT<span class="op">=</span><span class="va">formato</span><span class="op">)</span>
+<span class="co">#[1] "Messaggio informativo: Il sistema di riferimento di default è: http://localhost:8080/def/crs/EPSG/0/32632"</span>
+
+<span class="va">r</span>
+<span class="co">#class      : RasterLayer </span>
+<span class="co">#dimensions : 249, 251, 62499  (nrow, ncol, ncell)</span>
+<span class="co">#resolution : 1000, 1000  (x, y)</span>
+<span class="co">#extent     : 436000, 687000, 4918000, 5167000  (xmin, xmax, ymin, ymax)</span>
+<span class="co">#crs        : +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs </span>
+<span class="co">#source     : C:/Users/sgrasso/AppData/Local/Temp/RtmpkzJWGw/file33e4114ebfe.tiff </span>
+<span class="co">#names      : file33e4114ebfe</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></code></pre></div>
+<p><img src="images/r.PNG"></p>
+<p><strong>2. Scaricamento di un raster, nel sistema di riferimento MonteMario (ESPG:3003) - diverso dal sistema di riferimento della coverage, salvandolo con nome</strong></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coverage</span><span class="op">=</span><span class="st">"rh_ana"</span>
+<span class="va">data</span><span class="op">=</span><span class="st">"2020-05-18T12:00:00.000Z"</span>
+<span class="va">formato</span><span class="op">=</span><span class="st">"image/tiff"</span>
+<span class="va">CRSext</span><span class="op">=</span><span class="st">"http://localhost:8080/def/crs/EPSG/0/3003"</span>
+<span class="va">r2</span><span class="op">=</span><span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span>, DATA<span class="op">=</span><span class="va">data</span>, FORMAT<span class="op">=</span><span class="va">formato</span>, CRS_Extension<span class="op">=</span><span class="va">CRSext</span><span class="op">)</span>
+
+<span class="va">r2</span>
+<span class="co">#class      : RasterLayer </span>
+<span class="co">#dimensions : 249, 251, 62499  (nrow, ncol, ncell)</span>
+<span class="co">#resolution : 1000.019, 1000.019  (x, y)</span>
+<span class="co">#extent     : 1436026, 1687031, 4918018, 5167023  (xmin, xmax, ymin, ymax)</span>
+<span class="co">#crs        : +proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +units=m +no_defs </span>
+<span class="co">#source     : C:/Users/sgrasso/AppData/Local/Temp/RtmpkzJWGw/file33e472e214d.tiff </span>
+<span class="co">#names      : file33e472e214d</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r2</span><span class="op">)</span></code></pre></div>
+<p><img src="images/r2.PNG"></p>
+<p><strong>3. Scaricamento di un raster con opzione aggiuntiva Clipping Extension</strong> Scaricamento in una porzione del raster rh_ana (un quadrato di circa 20Km intorno a Milano Via Rosellini - EPSG 3003 (Roma40 GB Fuso Ovest): 1515230 , 5037450)</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coverage</span><span class="op">=</span><span class="st">"rh_ana"</span>
+<span class="va">data</span><span class="op">=</span><span class="st">"2020-05-18T12:00:00.000Z"</span>
+<span class="va">formato</span><span class="op">=</span><span class="st">"image/tiff"</span>
+<span class="va">CRSext</span><span class="op">=</span><span class="st">"http://localhost:8080/def/crs/EPSG/0/3003"</span>
+<span class="va">more</span><span class="op">=</span><span class="st">"clip=POLYGON((1505230 5027450,1525230 5027450, 1525230 5047450, 1505230 5047450, 1505230 5027450))"</span>
+
+<span class="va">r3</span><span class="op">=</span><span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span>, DATA<span class="op">=</span><span class="va">data</span>, FORMAT<span class="op">=</span><span class="va">formato</span>, CRS_Extension<span class="op">=</span><span class="va">CRSext</span>, others_opt<span class="op">=</span><span class="va">more</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r2</span>, col<span class="op">=</span><span class="st">'black'</span>, legend<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">r3</span>, box<span class="op">=</span><span class="cn">FALSE</span>, axes<span class="op">=</span><span class="cn">FALSE</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="images/r3.PNG"></p>
+<p><strong>4. Scaricamento e salvataggio come immagine (jpeg) di una parte di un raster determinata da un subset lungo l’asse delle ascisse (E/X)</strong></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coverage</span><span class="op">=</span><span class="st">"rh_ana"</span>
+<span class="va">data</span><span class="op">=</span><span class="st">"2020-05-18T12:00:00.000Z"</span>
+<span class="va">formato</span><span class="op">=</span><span class="st">"image/jpeg"</span>
+<span class="va">nomefile</span><span class="op">=</span><span class="st">"C:\\Users\\sgrasso\\Documents\\test.jpg"</span>
 <span class="va">subsetE</span><span class="op">=</span><span class="st">"E(436000,550000)"</span>
-<span class="va">b</span><span class="op">=</span><span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span>, DATA<span class="op">=</span><span class="va">data</span>, FORMAT<span class="op">=</span><span class="va">formato</span>, filename<span class="op">=</span><span class="va">nomefile</span>, SUBSET_E<span class="op">=</span><span class="va">subsetE</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/get_coverage.html">get_coverage</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span>, DATA<span class="op">=</span><span class="va">data</span>, FORMAT<span class="op">=</span><span class="va">formato</span>, filename<span class="op">=</span><span class="va">nomefile</span>, SUBSET_E<span class="op">=</span><span class="va">subsetE</span><span class="op">)</span>
+<span class="co">#[1] "Il sistema di riferimento di default è: http://localhost:8080/def/crs/EPSG/0/32632"</span>
+<span class="co">#[1] "L'immagine è stata salvata: C:\\Users\\sgrasso\\Documents\\test.jpg"</span>
+
+<span class="co">## Per plottare una immagine in R si può ad esempio utilizzare la libreria 'imager':</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"imager"</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://dahtah.github.io/imager">imager</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
+<span class="va">img</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/imager/man/load.image.html">load.image</a></span><span class="op">(</span><span class="va">nomefile</span><span class="op">)</span>
+<span class="co"># img</span>
+<span class="co"># Image. Width: 114 pix Height: 249 pix Depth: 1 Colour channels: 1 </span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">img</span><span class="op">)</span></code></pre></div>
+<p><img src="images/img.PNG"></p>
+</div>
+</div>
+<div id="utilizzo-della-funzione-image_from_coverage" class="section level3">
+<h3 class="hasAnchor">
+<a href="#utilizzo-della-funzione-image_from_coverage" class="anchor"></a>Utilizzo della funzione <code>image_from_coverage()</code>
+</h3>
+<p>Questa funziona permette in particolare di scaricare un raster multibanda espicitando nel parametro <strong>bands</strong> lista delle bande che si vogliono esportare. Nel caso di raster multibanda viene creato un RasterStack. Il raster viene sempre scaricato in formato image/tiff.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">image_from_coverage &lt;-<span class="st"> </span><span class="cf">function</span>(coverage, slice_E, slice_N, DATA, <span class="dt">bands=</span><span class="ot">NULL</span>, <span class="dt">filename=</span><span class="ot">NULL</span>, <span class="dt">query_url=</span><span class="ot">NULL</span>)</a></code></pre></div>
+<div id="esempi-uso-image_from_coverage" class="section level4">
+<h4 class="hasAnchor">
+<a href="#esempi-uso-image_from_coverage" class="anchor"></a>Esempi uso image_from_coverage</h4>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">coords</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"515200"</span>, <span class="st">"5037430"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="va">as.numeric</span>
+<span class="va">slice_E</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/as.character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">coords</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">-</span><span class="fl">10000</span>, <span class="va">coords</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">+</span><span class="fl">10000</span><span class="op">)</span><span class="op">)</span>
+<span class="va">slice_N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/as.character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">coords</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">-</span><span class="fl">10000</span>, <span class="va">coords</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">+</span><span class="fl">10000</span><span class="op">)</span><span class="op">)</span>
+<span class="va">data</span><span class="op">=</span><span class="st">"2020-10-01"</span>
+<span class="va">outfile</span><span class="op">=</span><span class="st">"C:\\Users\\sgrasso\\Desktop\\prova_rh_ana.tiff"</span>
+
+<span class="co">#coords</span>
+<span class="co">#[1]  515200 5037430</span>
+<span class="co">#slice_E</span>
+<span class="co">#[1] "505200" "525200"</span>
+<span class="co">#slice_N</span>
+<span class="co">#[1] "5027430" "5047430"</span>
+
+<span class="va">a</span><span class="op">=</span><span class="fu"><a href="../reference/image_from_coverage.html">image_from_coverage</a></span><span class="op">(</span><span class="va">coverage</span>, <span class="va">slice_E</span>, <span class="va">slice_N</span>, DATA<span class="op">=</span><span class="va">data</span>, bands<span class="op">=</span><span class="cn">NULL</span>,filename<span class="op">=</span><span class="va">outfile</span>, query_url<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>
+<span class="co">#[1] "Il raster ha una sola banda. Verrà restituito un raster con una sola banda"</span>
+<span class="co">#[1] "File temporaneoC:\\Users\\sgrasso\\AppData\\Local\\Temp\\RtmpkzJWGw/rh_ana_2020-10-01.tiff"</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></code></pre></div>
+<p><img src="images/a.PNG"></p>
+<p>Nel caso ad oggi aggiornato di Rasdaman di ARPA non vi sono salvati raster multibanda. Immaginiamo per esempio che il raster multibanda scaricato sia "myCubeR_RGB_Ortho.tif" (Immagine collezionata dalla Piattaforma NEON Airborne Observation. Ogni immagine RGB image è un raster di 3bande.</p>
+<p>Vediamo qualche manipolazione di raster stack come proposto qui <a href="https://datacarpentry.org/r-raster-vector-geospatial/05-raster-multi-band-in-r/" class="uri">https://datacarpentry.org/r-raster-vector-geospatial/05-raster-multi-band-in-r/</a>.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">file.path</span><span class="op">=</span><span class="st">"C:\\WSL_folder\\myCubeR\\vignettes\\test\\HARV_RGB_Ortho.tif"</span>
+<span class="va">RGB_stack_HARV</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/raster/man/stack.html">stack</a></span><span class="op">(</span><span class="va">file.path</span><span class="op">)</span>
+<span class="va">RGB_stack_HARV</span> 
+<span class="co">#class      : RasterStack </span>
+<span class="co">#dimensions : 2317, 3073, 7120141, 3  (nrow, ncol, ncell, nlayers)</span>
+<span class="co">#resolution : 0.25, 0.25  (x, y)</span>
+<span class="co">#extent     : 731998.5, 732766.8, 4712956, 4713536  (xmin, xmax, ymin, ymax)</span>
+<span class="co">#crs        : +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs </span>
+<span class="co">#names      : HARV_RGB_Ortho.1, HARV_RGB_Ortho.2, HARV_RGB_Ortho.3 </span>
+<span class="co">#min values :                0,                0,                0 </span>
+<span class="co">#max values :              255,              255,              255 </span>
+
+<span class="co">## Per estrarre o lavorare con le diverse bande:</span>
+<span class="va">banda1</span><span class="op">=</span><span class="va">RGB_stack_HARV</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="co">#oppure: banda1=raster(file.path, band = 2)</span>
+<span class="va">banda1</span><span class="op">=</span><span class="va">RGB_stack_HARV</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
+<span class="va">banda3</span><span class="op">=</span><span class="va">RGB_stack_HARV</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
+
+<span class="va">banda1</span>
+<span class="co">#class      : RasterLayer </span>
+<span class="co">#band       : 1  (of  3  bands)</span>
+<span class="co">#dimensions : 2317, 3073, 7120141  (nrow, ncol, ncell)</span>
+<span class="co">#resolution : 0.25, 0.25  (x, y)</span>
+<span class="co">#extent     : 731998.5, 732766.8, 4712956, 4713536  (xmin, xmax, ymin, ymax)</span>
+<span class="co">#crs        : +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs </span>
+<span class="co">#source     : C:/WSL_folder/myCubeR/vignettes/test/HARV_RGB_Ortho.tif </span>
+<span class="co">#names      : HARV_RGB_Ortho.1 </span>
+<span class="co">#values     : 0, 255  (min, max)</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plot.html">plot</a></span><span class="op">(</span><span class="va">banda1</span><span class="op">)</span></code></pre></div>
+<p><img src="images/banda1.PNG"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Per creare una immagine </span>
+<span class="fu"><a href="https://rdrr.io/pkg/raster/man/plotRGB.html">plotRGB</a></span><span class="op">(</span><span class="va">RGB_stack_HARV</span>, r <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
+<p><img src="images/RGB_HARV.PNG"></p>
+</div>
 </div>
 </div>
   </div>

@@ -100,14 +100,15 @@
 <div id="introduzione" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduzione" class="anchor"></a>Introduzione</h2>
-<p>Di seguito vengono illustrate le funzioni che permettono di :</p>
-<ul>
-<li>fornire informazioni sul servizio Rasdaman di ARPA LOMBARDIA (utilizzando la funzione <strong><em>GetCapabilities</em></strong> del WCS)
-<ul>
-<li><code><a href="../reference/getCapability.html">getCapability()</a></code></li>
-</ul>
-</li>
-<li>interrogare i metadati (ottenere descrizione e alcune proprietà) di specifiche Coverage (utilizzando la funzione <strong><em>DescribeCoverage</em></strong> dei WCS). <br> Fanno parte di queste funzioni:
+La funzione <code><a href="../reference/getCapability.html">getCapability()</a></code> permette innanzitutto di restituire le diverse coverage offerte dal servizio di Rasdaman di ARPA LOMBARDIA.
+<p style="display:inline; font-style: italic; color:gray">
+[Utilizza la funzione <strong><em>GetCapabilities</em></strong> del WCS]
+</p>
+<p><br></p>
+Attraverso le seguenti funzioni è invece possibile interrogare i metadati (ottenere descrizione e alcune proprietà) di una specifica coverage selezionata:
+<p style="display:inline; font-style: italic; color:gray">
+[Utilizzano la funzione <strong><em>DescribeCoverage</em></strong> del servizio WCS]
+</p>
 <ul>
 <li><code><a href="../reference/coverage_get_bands.html">coverage_get_bands()</a></code></li>
 <li><code><a href="../reference/coverage_get_bounding_box.html">coverage_get_bounding_box()</a></code></li>
@@ -117,74 +118,76 @@
 <li><code><a href="../reference/coverage_get_temporal_extent.html">coverage_get_temporal_extent()</a></code></li>
 <li><code><a href="../reference/coverage_get_timestamps.html">coverage_get_timestamps()</a></code></li>
 </ul>
-</li>
-</ul>
 </div>
-<div id="utilizzare-le-funzioni-implementate" class="section level2">
+<div id="importazione-delle-librerie-necessarie" class="section level2">
 <h2 class="hasAnchor">
-<a href="#utilizzare-le-funzioni-implementate" class="anchor"></a>Utilizzare le funzioni implementate</h2>
-<p><strong>Importare le librerie</strong></p>
+<a href="#importazione-delle-librerie-necessarie" class="anchor"></a>Importazione delle librerie necessarie</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">CubeR</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/">tibble</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">magrittr</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster">raster</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">myCubeR</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="utilizzo-delle-funzioni-implementate" class="section level2">
+<h2 class="hasAnchor">
+<a href="#utilizzo-delle-funzioni-implementate" class="anchor"></a>Utilizzo delle funzioni implementate</h2>
 <p>Richiedere l’elenco delle Coverage/Servizi WCS offerti dal server Rasdaman:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coverages</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/getCapability.html">getCapability</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coverages</span>
-<span class="co"># [1] "rh_ana" </span></code></pre></div>
+<span class="co">#[1]  "rh_ana"    "rh_idi"    "t2m_idi"   "enne_mean" "t2m_ana"   "prec_ana"  "pwet_idi"  "bui"       "fwi"       "ffmc"      "pdry_idi" </span>
+<span class="co">#[12] "dmc"       "rh_hdx"    "isi"       "dc"        "t2m_bkg"   </span></code></pre></div>
 <p>Scegliere una coverage (in questo caso <em>rh_ana</em>):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coverage</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/getCapability.html">getCapability</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">coverage</span>
-<span class="co"># [1] "rh_ana" </span></code></pre></div>
+<span class="co">#[1] "rh_ana" </span></code></pre></div>
 <p>Per la coverage selezionata (<em>rh_ana</em>) è possibile:</p>
 <p>Richiedere gli “assi” che descrivono i Datacube (solitamente X,Y e come terza variabile/asse il tempo):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">axes</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/coverage_get_coordsys.html">coverage_get_coordsys</a></span><span class="op">(</span>coverage <span class="op">=</span> <span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">axes</span>
-<span class="co"># [1] "ansi" "E"    "N" </span></code></pre></div>
+<span class="co">#[1] "ansi" "E"    "N" </span></code></pre></div>
 <p>Richiedere il sistema di riferimento della coverage</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">ref_sys=<span class="kw">coverage_get_coordinate_reference</span>(<span class="dt">coverage=</span>coverage</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ref_sys</span><span class="op">=</span><span class="fu"><a href="../reference/coverage_get_coordinate_reference.html">coverage_get_coordinate_reference</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ref_sys</span>
-<span class="co"># [1] "32632"</span></code></pre></div>
+<span class="co">#[1] "32632"</span></code></pre></div>
 <p>Richiedere “l’estensione temporale” della Coverage</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">temp_ext</span><span class="op">=</span><span class="fu"><a href="../reference/coverage_get_temporal_extent.html">coverage_get_temporal_extent</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">temp_ext</span>
-<span class="co"># [1] "2020-05-18T12:00:00.000Z" "2020-11-10T06:00:00.000Z"</span></code></pre></div>
+<span class="co">#[1] "2020-05-18T12:00:00.000Z" "2020-11-10T06:00:00.000Z"</span></code></pre></div>
 <p>Richiedere l’entensione (BBOX) spaziale della Coverage</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bb_box</span><span class="op">=</span><span class="fu"><a href="../reference/coverage_get_bounding_box.html">coverage_get_bounding_box</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bb_box</span>
-<span class="co"># [1] "436000"  "687000"  "4918000" "5167000"</span></code></pre></div>
+<span class="co">#[1] "436000"  "687000"  "4918000" "5167000"</span></code></pre></div>
 <p>Richiedere la risoluzione spaziale della Coverage</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span><span class="op">=</span><span class="fu"><a href="../reference/coverage_get_resolution.html">coverage_get_resolution</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span>
-<span class="co"># [1] 1000</span></code></pre></div>
+<span class="co">#[1] 1000</span></code></pre></div>
 <p>Richiedere il nome delle bande (di default per Rasdaman di ARPA LOMBARDIA la variabile principale viene nominata <em>field_1</em>. Es per rh_ana corrisponde a……)</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bands</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/coverage_get_bands.html">coverage_get_bands</a></span><span class="op">(</span>coverage <span class="op">=</span> <span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bands</span>
 <span class="co">#[1] "field_1"</span></code></pre></div>
-<p>Richiedere tutte gli “timestamp” / date per cui sono disponibili i raster che costruiscono il Datacube</p>
+<p>Richiedere tutte i “timestamp”/le date per cui sono disponibili i raster che costruiscono il Datacube</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">time_stamp</span><span class="op">=</span><span class="fu"><a href="../reference/coverage_get_timestamps.html">coverage_get_timestamps</a></span><span class="op">(</span>coverage<span class="op">=</span><span class="va">coverage</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">time_stamp</span>
-<span class="co">#.....................</span>
+<span class="co">#[1] "2020-05-18T12:00:00.000Z" "2020-05-18T13:00:00.000Z" "2020-05-18T14:00:00.000Z" "2020-05-18T15:00:00.000Z" "2020-05-18T16:00:00.000Z"</span>
+<span class="co">#[6] "2020-05-18T17:00:00.000Z" "2020-05-18T18:00:00.000Z" "2020-05-18T19:00:00.000Z" "2020-05-18T20:00:00.000Z" "2020-05-18T21:00:00.000Z"</span>
+<span class="co"># ................</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Un totale di"</span>,<span class="fu">lenght</span><span class="op">(</span><span class="va">time_stamp</span><span class="op">)</span>, <span class="st">"dati"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Un totale di"</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">time_stamp</span><span class="op">)</span>, <span class="st">"dati"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#[1] "Un totale di 4133 dati"</span></code></pre></div>
 </div>
   </div>

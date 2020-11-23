@@ -18,33 +18,30 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduzione
-Di seguito vengono illustrate le funzioni che permettono di :
 
-* fornire informazioni sul servizio Rasdaman di ARPA LOMBARDIA (utilizzando la funzione ***GetCapabilities*** del WCS)
-	* `getCapability()`
+La funzione `getCapability()` permette innanzitutto di restituire le diverse coverage offerte dal servizio di Rasdaman di ARPA LOMBARDIA.
+<p style="display:inline; font-style: italic; color:gray"> [Utilizza la funzione ***GetCapabilities*** del WCS] </p>
+<br>
+
+Attraverso le seguenti funzioni è invece possibile interrogare i metadati (ottenere descrizione e alcune proprietà) di una specifica coverage selezionata:
+<p style="display:inline; font-style: italic; color:gray"> [Utilizzano la funzione ***DescribeCoverage*** del servizio WCS] </p>
+
+* `coverage_get_bands()`
+* `coverage_get_bounding_box()`
+* `coverage_get_coordinate_reference()`
+* `coverage_get_coordsys()`
+* `coverage_get_resolution()`
+* `coverage_get_temporal_extent()`
+* `coverage_get_timestamps()`
 
 
-* interrogare i metadati (ottenere descrizione e alcune proprietà) di specifiche Coverage (utilizzando la funzione ***DescribeCoverage*** dei WCS). <br> Fanno parte di queste funzioni:
-	* `coverage_get_bands()`
-	* `coverage_get_bounding_box()`
-	* `coverage_get_coordinate_reference()`
-	* `coverage_get_coordsys()`
-	* `coverage_get_resolution()`
-	* `coverage_get_temporal_extent()`
-	* `coverage_get_timestamps()`
-
-
-## Utilizzare le funzioni implementate
-
-**Importare le librerie**
+## Importazione delle librerie necessarie
 
 ```r
-library(CubeR)
-library(tibble)
-library(magrittr)
-library(raster)
+library(myCubeR)
 ```
 
+## Utilizzo delle funzioni implementate
 Richiedere l'elenco delle Coverage/Servizi WCS offerti dal server Rasdaman:
 
 ```r
@@ -53,7 +50,8 @@ coverages<-getCapability()
 
 ```r
 coverages
-# [1] "rh_ana" 
+#[1]  "rh_ana"    "rh_idi"    "t2m_idi"   "enne_mean" "t2m_ana"   "prec_ana"  "pwet_idi"  "bui"       "fwi"       "ffmc"      "pdry_idi" 
+#[12] "dmc"       "rh_hdx"    "isi"       "dc"        "t2m_bkg"   
 ```
 
 Scegliere una coverage (in questo caso *rh_ana*):
@@ -64,7 +62,7 @@ coverage<-getCapability()[1]
 
 ```r
 coverage
-# [1] "rh_ana" 
+#[1] "rh_ana" 
 ```
 
 
@@ -78,17 +76,17 @@ axes<-coverage_get_coordsys(coverage = coverage)
 
 ```r
 axes
-# [1] "ansi" "E"    "N" 
+#[1] "ansi" "E"    "N" 
 ```
 
 Richiedere il sistema di riferimento della coverage
 
 ```r
-ref_sys=coverage_get_coordinate_reference(coverage=coverage
+ref_sys=coverage_get_coordinate_reference(coverage=coverage)
 ```
 ```r
 ref_sys
-# [1] "32632"
+#[1] "32632"
 ```
 
 Richiedere "l'estensione temporale" della Coverage
@@ -98,7 +96,7 @@ temp_ext=coverage_get_temporal_extent(coverage=coverage)
 ```
 ```r
 temp_ext
-# [1] "2020-05-18T12:00:00.000Z" "2020-11-10T06:00:00.000Z"
+#[1] "2020-05-18T12:00:00.000Z" "2020-11-10T06:00:00.000Z"
 ```
 
 Richiedere l'entensione (BBOX) spaziale della Coverage
@@ -108,7 +106,7 @@ bb_box=coverage_get_bounding_box(coverage=coverage)
 ```
 ```r
 bb_box
-# [1] "436000"  "687000"  "4918000" "5167000"
+#[1] "436000"  "687000"  "4918000" "5167000"
 ```
 
 Richiedere la risoluzione spaziale della Coverage
@@ -118,7 +116,7 @@ res=coverage_get_resolution(coverage=coverage)
 ```
 ```r
 res
-# [1] 1000
+#[1] 1000
 ```
 
 Richiedere il nome delle bande (di default per Rasdaman di ARPA LOMBARDIA la variabile principale viene nominata *field_1*. Es per rh_ana corrisponde a......)
@@ -131,15 +129,17 @@ bands
 #[1] "field_1"
 ```
 
-Richiedere tutte gli "timestamp" / date per cui sono disponibili i raster che costruiscono il Datacube
+Richiedere tutte i "timestamp"/le date per cui sono disponibili i raster che costruiscono il Datacube
 
 ```r
 time_stamp=coverage_get_timestamps(coverage=coverage)
 ```
 ```r
 time_stamp
-#.....................
+#[1] "2020-05-18T12:00:00.000Z" "2020-05-18T13:00:00.000Z" "2020-05-18T14:00:00.000Z" "2020-05-18T15:00:00.000Z" "2020-05-18T16:00:00.000Z"
+#[6] "2020-05-18T17:00:00.000Z" "2020-05-18T18:00:00.000Z" "2020-05-18T19:00:00.000Z" "2020-05-18T20:00:00.000Z" "2020-05-18T21:00:00.000Z"
+# ................
 
-print(paste("Un totale di",lenght(time_stamp), "dati"))
+print(paste("Un totale di",length(time_stamp), "dati"))
 #[1] "Un totale di 4133 dati"
 ```

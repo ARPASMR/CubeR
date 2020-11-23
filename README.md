@@ -3,9 +3,8 @@
 # CubeR - ARPASMR
 ## Un pacchetto R per accedere ai Data Cubes archiviati in Rasdaman tramite servizi WCS and WCPS.
 
-Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone i servizi OGC.
-
-Repository modificato a partire dal repository clonato [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
+Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone i servizi OGC. 
+Repository modificato a partire dal repository [mattia6690/CubeR](https://github.com/mattia6690/CubeR)
 
 ### Installazione 
 Il pacchetto può essere importato in R come segue:
@@ -30,10 +29,10 @@ Tutte le funzioni che iniziano con `coverage_get_` permettono di ricavare i meta
 #### 2. Scaricamento dei dati
 La funzione `get_coverage()` permette di scaricare una coverage o parte di essa fruttando la funzione *GetCoverage* dei servizi WCS.
 
-E' stata creata poi una funzione particolare `image_from_coverage()` per scaricare in particolare immagini multibanda.
+E' stata creata poi una funzione particolare `image_from_coverage()` per scaricare in particolare raster multibanda.
 
 #### 3. Elaborazione dei dati
-La funzione `WPCS_query()` permette di codificare una query passata in formato *rasql* (rasdaman Query Language), comporre l'url per inviare la richiesta del servizio secondo lo standard WCS OGC.
+La funzione `WPCS_query()` permette, a partire da una query passata in formato *rasql* (rasdaman Query Language), di comporre ed inviare una richiesta secondo lo standard WCPS OGC e interpretare e scaricare la risposta del servizio.
 
-Altre funzioni di processamento dei dati già implementate:
+Funzioni di processamento dei dati già implementate "ad hoc":
 - `pixel_history()`

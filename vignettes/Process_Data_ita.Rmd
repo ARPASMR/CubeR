@@ -18,26 +18,127 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduzione
-Grazie alle funzionalità di Rasdaman e dei Web Coverage Processing Services (WCPS) è possibile richiedere analisi sui Data Cube attarverso query in linguaggio *rasql*.
+Grazie alle funzionalità di Rasdaman e dei Web Coverage Processing Services (WCPS) è possibile richiedere analisi sui Data Cube attraverso query in linguaggio *rasql*.
 
 La funzione in questo pacchetto implementata, `WPCS_query()`, permette, di comporre, inviare e interpretare la richiesta WCPS a partire da una query inserita in linguaggio rasql.
 
-Sono state inoltre realizzate le seguenti funzioni AD HOC per permettere particolari analisi dei dati:
-* pixel_history()
+Sono state inoltre realizzate le seguenti funzioni "ad hoc" per permettere particolari analisi dei dati:
+
+* `pixel_history()`
 
 Per maggiori approfondimenti sul servizo WCPS e sulle query:
+
 * https://tutorial.rasdaman.org/rasdaman-and-ogc-ws-tutorial/#ogc-web-services-web-coverage-processing-service
 * https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-processing-service-wcps
 
-## Esempi
-#### 1. Esempio1: Testare ritorno di un valore per una coverage per una determinata data e punto
+## Librerie da importare 
 ```r
-query='for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01")], "text/csv")'
-WPCS_query(proper_query=query, FORMAT="text/csv", filename=NULL, query_url=NULL)
+library(stringr)
+```
+
+## Utilizzo delle funzioni implementate
+
+### Funzione WCPS_query
+
+**1. Esempio1: Testare il ritorno di un valore puntuale per una coverage**
+
+1.1 Valore del raster *rh_ana* alle ore 12.00 del 01/10/2020 in Via Rosellini, Milano (coordinate in WGS84-UTM32N (EPSG:32632) ≈ 515200,5037430)
+
+```r
+query='for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01T12:00:00.000Z")], "text/csv")'
+valore=WPCS_query(proper_query=query, FORMAT="text/csv", filename=NULL, query_url=NULL)
+valore
+# [1] "75.81543"
 
 #Nel caso in cui volessi salvare il risultato in formato txt:
-nomefile="C:\\Documents\\prova.txt"
+nomefile="C:\\Users\\sgrasso\\Documents\\prova.txt"
 WPCS_query(proper_query=query, FORMAT="text/csv", filename=nomefile, query_url=NULL)
 ```
 
+1.2 Restituzione di tutti i valori in un giorno (01/10/2020) dell'indice rh_ana per una una cella (Via Rosellini Milano, coord. in EPSG32632 ≈ 1515230 , 5037450):
+```r
+query='for c in (rh_ana) return encode(c[E(515200),N(5037430), ansi("2020-10-01T01:00:00.000Z":"2020-10-02T00:00:00.000Z")], "text/csv")'
+valori=WPCS_query(proper_query=query, FORMAT="text/csv", filename=NULL, query_url=NULL)
+valori
+# > [1] "78.29424,78.10179,77.06179,77.78443,77.91264,78.66537,79.25977,78.66717,78.71285,78.28491,78.76523,75.81543,72.50939,66.867,64.41194,64.49937,65.00713,68.65109,75.54008,80.41253,83.48976,84.73904,86.6781,86.30321"
 
+# Test nel numero di valori estratti
+# lista_valori=unlist(strsplit(valori, ","))
+# length(lista_valori)
+# > [1] 24
+```
+
+1.3 Restituzione del valore medio giornalierio (01/10/2020) dell'indice rh_ana per una una cella (Via Rosellini Milano, coord. in EPSG32632 ≈ 1515230 , 5037450)
+
+Corrisponde alla media dei valori estratti all'esempio precedente 1.2
+```r
+query='for c in (rh_ana) return encode(avg(c[E(515200),N(5037430), ansi("2020-10-01T01:00:00.000Z":"2020-10-02T00:00:00.000Z")]), "text/csv")'
+media=WPCS_query(proper_query=query, FORMAT="text/csv", filename=NULL, query_url=NULL)
+media
+# > [1] "76.51809469858806"
+
+# Test che il risultato sia corretto
+# Trasformo gli oggetti della lista, ora stringhe, in valori numerici
+# b=as.numeric(lista_valori) # ovvero: b=as.numeric(unlist(strsplit(valori, ",")))
+# mean(b)
+# > [1] 76.51809
+```
+
+**2. Esempio2: Restituzione tramite WCPS query di un raster tematizzato**
+
+Oltre che tramite la funzione `get_coverage()`, anche tramite WCPS query è possibile scaricare parti di DataCubes in formto immagine o raster.
+<br> Nell'esempio proposto si veda la restituzione in formato png dell'indice fwi con un particolare tematismo
+
+```r
+query='for $c in ( fwi ) return encode( switch case $c[ansi("2020-08-01T00:00:00.000Z")]=-9999 return {red:0; green:0; blue:0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]<7 return {red: 46; green: 137; blue: 50}
+case $c[ansi("2020-08-01T00:00:00.000Z")]>=7 and $c[ansi("2020-08-01T00:00:00.000Z")]<10 return {red: 0; green: 255; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]>=10 and $c[ansi("2020-08-01T00:00:00.000Z")]<20 return {red: 255; green: 255; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]>=20 and $c[ansi("2020-08-01T00:00:00.000Z")]<40 return {red: 255; green: 127; blue: 0}
+case $c[ansi("2020-08-01T00:00:00.000Z")]>=40 return {red: 255; green: 0; blue: 0}
+default return {red: 255; green: 255; blue: 255}, "image/png")'
+
+filename="C:\\Users\\sgrasso\\Documents\\fwi_20200810.png"
+formato="image/png"
+
+WPCS_query(proper_query=query, FORMAT=formato, filename=filename)
+#[1] "Formato immagine"
+#[1] "Immagine salvata: C:\\Users\\sgrasso\\Documents\\fwi_20200810.png"
+```
+<img src="images/fwi.png">
+
+### Funzione pixel_history
+
+Serie storica e grafico dei valori dell'indice tm2_ana per un punto (Milano)
+```r
+# Definizione parametri necessari
+coords<-as.numeric(c("515200", "5037430")) #Coordinate di Milano in EPSG 32632 (WGS84 - UTM32N)
+coverage="t2m_ana"
+
+coord_sys <- coverage_get_coordsys(coverage=coverage)
+bands <- coverage_get_bands(coverage=coverage)
+# bands
+#[1] "field_1"
+```
+Richiamando la funzione con l'opzione Plot = F restituisce in output le righe successive (non il grafico).
+<br> Non sepcificando inoltre la data (date=NULL) restituisce tutti i valori di tutta la serie storica.
+```r
+pixel_history(coverage = coverage, coord_sys = coord_sys, bands = bands, coords = coords, date=NULL, plot = F)
+#                         Date  field_1
+# 1   2020-05-18T12:00:00.000Z 24.68497
+# 2   2020-05-18T13:00:00.000Z 25.96832
+# 3   2020-05-18T14:00:00.000Z 26.10790
+# 4   2020-05-18T15:00:00.000Z 26.64294
+# 5   2020-05-18T16:00:00.000Z 26.77955
+# ......................
+```
+
+Richiamando la funzione con l'opzione Plot = TRUE restituisce il grafico.
+<br> Di seguito un esempio specificando un intervallo di date: dal 01/09/20 al 01/11/20
+
+```r
+#Test inserimento data inizio e data fine da parte dell'utente con plot grafico
+date <- c("2020-09-01","2020-11-01") # N.B Il giorno finale è escluso dal conteggio
+pixel_history(coverage = coverage, coord_sys = coord_sys, bands = bands, coords = coords, date = date, plot = TRUE)
+```
+<img src="images/plot.png">

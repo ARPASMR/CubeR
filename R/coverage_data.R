@@ -58,7 +58,7 @@ get_coverage <- function(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, B
   bbox=coverage_get_bounding_box(coverage=coverage)
   if(is.null(CRS_Extension)) {
 	CRS_Extension <- CRS_Ext(coverage=coverage)
-	print(paste0('Il sistema di riferimento di default è: ',CRS_Extension))
+	print(paste0('Messaggio informativo: Il sistema di riferimento di default è: ',CRS_Extension))
   }
   
   desc_url<-createWCS_URLs(type="Get")
@@ -70,7 +70,10 @@ get_coverage <- function(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, B
   if (!is.null(SUBSET_E)) request=paste0(request,'&SUBSET=',SUBSET_E)
   if (!is.null(SUBSET_N)) request=paste0(request,'&SUBSET=',SUBSET_N)
   if(!is.null(BAND)) request=paste0(ulr1,'&RANGESUBSET=',BAND)
-  if(!is.null(others_opt)) request=paste0(request,'&',others_opt)
+  if(!is.null(others_opt)){
+	more_opt=URLencode(others_opt)
+	request=paste0(request,'&',more_opt)
+  }
   
   #print(request) #Messaggio di controllo
   res <- GET(request)
@@ -101,16 +104,16 @@ get_coverage <- function(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, B
 		}
   #image format
 	} else if (FORMAT %in% imageformats){
-		print("Formato immagine")
+		#print("Formato immagine")
 		if (is.null(filename)) {
 		savefile(response=res,filename=tmp_file)
 		print(paste0("Immagine salvata nel file temporaneo: ", tmp_file))
 		} else {
 		savefile(response=res,filename=filename)
-        print(paste0("Immagine salvata: ", filename))
+        print(paste0("L'immagine è stata salvata: ", filename))
 		}
 	} else {
-		stop('Formato non riconosciuto')
+		stop('ATTENZIONE: Formato non riconosciuto')
 	}
 }
   

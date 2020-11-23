@@ -18,14 +18,29 @@ knitr::opts_chunk$set(
 ```
 
 ## Introduzione
-E' possibile scaricare e/o estrarre i Datacube utilizzando utilizzando la funzione della libreria `get_coverage()` (che a sua volta utilizza la funzione *GetCoverage* dei servizi WCS).
+E' possibile scaricare e/o estrarre i Datacube utilizzando la funzione della libreria **`get_coverage()`**.
 
-Vedere l'immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l'analogia con l'interfaccia grafica di Rasdaman.
+Tale funzione utilizza la funzione *GetCoverage* dei servizi WCS (Vedere l'immagine <a href="images/GetCoverage.png">GetCoverage.png</a> per comprendere l'analogia con l'interfaccia grafica di Rasdaman); per cui è possibile scaricare un raster o parte di esso dichiarando diverse opzioni.
+
+**NB: La funzione implementata in questa libreria non permette lo scaricamento contemporaneo di più raster, ovvero non è possibile inserire un intervallo di date o più bande. Ogni richiesta deve essere fatta per una singola data/ora e per una singola banda; il che corriponde allo scaricamento di un singolo raster.**
+
+Per scaricare invece raster multibanda utilizzare la funzione **`image_from_coverage()`**.
+
+## Importazione delle librerie necessarie
+```r
+library(myCubeR)
+library(raster)
+```
+
+## Utilizzo delle funzioni implementate
+
+### Utilizzo della funzione `get_coverage()`
 
 Attraverso l'utilizzo della funzione `get_coverage()` è possibile scaricare parte di una Coverage (effettuando uno "slicing" del DataCube) in diversi formati:
+
 * testo: "text/csv"
-* raster: "image/tif"
-* immagine: es. "image/tiff", "image/png", "image/jpeg"
+* raster: "image/tiff"
+* immagine: es. "image/bmp", "image/png", "image/jpeg"
 
 La funzione è così costruita: 
 
@@ -35,24 +50,176 @@ get_coverage(coverage, DATA, FORMAT, SUBSET_E=NULL, SUBSET_N=NULL, BAND=NULL, CR
 
 E' dunque possibile specificare:
 
-- coverage: la coverage che si vuole interrogare/scaricare
-- DATA: una data per cui si sta interrogando la coverage
-- FORMAT: il formato di restituzione del dato. Per come impostato il formato può essere: "text/csv" (forato testo), "image/tiff" (formato raster), oppure "image/png", "image/jpeg", "image/bmp" (formati immagine)
-- slice_E, slice_N: il "sottinsieme"/taglio della coverage che si vuole ottenere impostando i limiti degli assi *E/X, N/Y*
-- BAND: la banda che si vuole interrogare
+- coverage: il nome della coverage che si vuole interrogare/scaricare [campo obbligatorio]
+- DATA: il timestamp d'interesse (data_e_ora) della coverage [campo obbligatorio]
+- FORMAT: il formato di restituzione del dato. Per come impostato il formato può essere: "text/csv", "image/tiff", "image/png","image/jpeg","image/bmp" [campo obbligatorio]
+- SUBSET_E, SUBSET_N: il subset della coverage che si vuole ottenere impostando i limiti degli assi E e N (X e Y)
+- BAND: nome della banda che si vuole interrogare
 - CRS_Extension: il sistema di riferimento con il quale di vuole scaricare il dato (se non specificato *NULL* coincide con il sistema di riferimento principale della coverage)
 - filename: il nome/percorso con cui si vuole eventualmente salvare il risultato
-- others_opt: "altre opzioni" previste dal servizio GetCoverage (es. Clipping Extension). 
+- others_opt: 'altre opzioni' previste dal servizio GetCoverage (es. Clipping Extension). 
+
 
 Per maggiori in formazioni sulle opzioni della funzione GetCoverage:  [OGC WCS - Rasdaman Doc](https://doc.rasdaman.org/05_geo-services-guide.html#ogc-web-coverage-service)
 
-## ESEMPI
-#### 1. Scaricamento di una parte di un raster determinata da un subset lungo l'asse delle ascisse (E o X)
+#### Esempi
+
+**1. Scaricamento di un raster (intero) specificandone solo la data **
 ```r
 coverage="rh_ana"
 data="2020-05-18T12:00:00.000Z"
 formato="image/tiff"
-nomefile="C:\\Documents\\output\\test.tiff"
-subsetE="E(436000,550000)"
-b=get_coverage(coverage=coverage, DATA=data, FORMAT=formato, filename=nomefile, SUBSET_E=subsetE)
+r=get_coverage(coverage=coverage, DATA=data, FORMAT=formato)
+#[1] "Messaggio informativo: Il sistema di riferimento di default è: http://localhost:8080/def/crs/EPSG/0/32632"
+
+r
+#class      : RasterLayer 
+#dimensions : 249, 251, 62499  (nrow, ncol, ncell)
+#resolution : 1000, 1000  (x, y)
+#extent     : 436000, 687000, 4918000, 5167000  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs 
+#source     : C:/Users/sgrasso/AppData/Local/Temp/RtmpkzJWGw/file33e4114ebfe.tiff 
+#names      : file33e4114ebfe
+
+plot(r)
 ```
+<img src="images/r.png">
+
+
+**2. Scaricamento di un raster, nel sistema di riferimento MonteMario (ESPG:3003) - diverso dal sistema di riferimento della coverage, salvandolo con nome**
+```r
+coverage="rh_ana"
+data="2020-05-18T12:00:00.000Z"
+formato="image/tiff"
+CRSext="http://localhost:8080/def/crs/EPSG/0/3003"
+r2=get_coverage(coverage=coverage, DATA=data, FORMAT=formato, CRS_Extension=CRSext)
+
+r2
+#class      : RasterLayer 
+#dimensions : 249, 251, 62499  (nrow, ncol, ncell)
+#resolution : 1000.019, 1000.019  (x, y)
+#extent     : 1436026, 1687031, 4918018, 5167023  (xmin, xmax, ymin, ymax)
+#crs        : +proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl +units=m +no_defs 
+#source     : C:/Users/sgrasso/AppData/Local/Temp/RtmpkzJWGw/file33e472e214d.tiff 
+#names      : file33e472e214d
+
+plot(r2)
+```
+<img src="images/r2.png">
+
+**3. Scaricamento di un raster con opzione aggiuntiva Clipping Extension**
+Scaricamento in una porzione del raster rh_ana (un quadrato di circa 20Km intorno a Milano Via Rosellini - EPSG 3003 (Roma40 GB Fuso Ovest): 1515230 , 5037450)
+
+```r
+coverage="rh_ana"
+data="2020-05-18T12:00:00.000Z"
+formato="image/tiff"
+CRSext="http://localhost:8080/def/crs/EPSG/0/3003"
+more="clip=POLYGON((1505230 5027450,1525230 5027450, 1525230 5047450, 1505230 5047450, 1505230 5027450))"
+
+r3=get_coverage(coverage=coverage, DATA=data, FORMAT=formato, CRS_Extension=CRSext, others_opt=more)
+
+plot(r2, col='black', legend=FALSE)
+plot(r3, box=FALSE, axes=FALSE, add = TRUE)
+```
+<img src="images/r3.png">
+
+**4. Scaricamento e salvataggio come immagine (jpeg) di una parte di un raster determinata da un subset lungo l'asse delle ascisse (E/X)**
+```r
+coverage="rh_ana"
+data="2020-05-18T12:00:00.000Z"
+formato="image/jpeg"
+nomefile="C:\\Users\\sgrasso\\Documents\\test.jpg"
+subsetE="E(436000,550000)"
+get_coverage(coverage=coverage, DATA=data, FORMAT=formato, filename=nomefile, SUBSET_E=subsetE)
+#[1] "Il sistema di riferimento di default è: http://localhost:8080/def/crs/EPSG/0/32632"
+#[1] "L'immagine è stata salvata: C:\\Users\\sgrasso\\Documents\\test.jpg"
+
+## Per plottare una immagine in R si può ad esempio utilizzare la libreria 'imager':
+install.packages("imager")
+library(imager)
+library(devtools)
+img <- load.image(nomefile)
+# img
+# Image. Width: 114 pix Height: 249 pix Depth: 1 Colour channels: 1 
+plot(img)
+```
+<img src="images/img.png">
+
+
+### Utilizzo della funzione `image_from_coverage()`
+Questa funziona permette in particolare di scaricare un raster multibanda espicitando nel parametro **bands** lista delle bande che si vogliono esportare.
+Nel caso di raster multibanda viene creato un RasterStack. Il raster viene sempre scaricato in formato image/tiff.
+
+```r
+image_from_coverage <- function(coverage, slice_E, slice_N, DATA, bands=NULL, filename=NULL, query_url=NULL)
+```
+
+#### Esempi uso image_from_coverage
+```r
+coords<-c("515200", "5037430") %>% as.numeric
+slice_E <- as.character(c(coords[1]-10000, coords[1]+10000))
+slice_N <- as.character(c(coords[2]-10000, coords[2]+10000))
+data="2020-10-01"
+outfile="C:\\Users\\sgrasso\\Desktop\\prova_rh_ana.tiff"
+
+#coords
+#[1]  515200 5037430
+#slice_E
+#[1] "505200" "525200"
+#slice_N
+#[1] "5027430" "5047430"
+
+a=image_from_coverage(coverage, slice_E, slice_N, DATA=data, bands=NULL,filename=outfile, query_url=NULL)
+#[1] "Il raster ha una sola banda. Verrà restituito un raster con una sola banda"
+#[1] "File temporaneoC:\\Users\\sgrasso\\AppData\\Local\\Temp\\RtmpkzJWGw/rh_ana_2020-10-01.tiff"
+
+plot(a)
+```
+<img src="images/a.png">
+
+
+Nel caso ad oggi aggiornato di Rasdaman di ARPA non vi sono salvati raster multibanda. 
+Immaginiamo per esempio che il raster multibanda scaricato sia "myCubeR\vignettes\test\HARV_RGB_Ortho.tif" (Immagine collezionata dalla Piattaforma NEON Airborne Observation. Ogni immagine RGB image è un raster di 3bande.
+
+Vediamo qualche manipolazione di raster stack come proposto qui https://datacarpentry.org/r-raster-vector-geospatial/05-raster-multi-band-in-r/.
+
+```r
+file.path="C:\\WSL_folder\\myCubeR\\vignettes\\test\\HARV_RGB_Ortho.tif"
+RGB_stack_HARV <- stack(file.path)
+RGB_stack_HARV 
+#class      : RasterStack 
+#dimensions : 2317, 3073, 7120141, 3  (nrow, ncol, ncell, nlayers)
+#resolution : 0.25, 0.25  (x, y)
+#extent     : 731998.5, 732766.8, 4712956, 4713536  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs 
+#names      : HARV_RGB_Ortho.1, HARV_RGB_Ortho.2, HARV_RGB_Ortho.3 
+#min values :                0,                0,                0 
+#max values :              255,              255,              255 
+
+## Per estrarre o lavorare con le diverse bande:
+banda1=RGB_stack_HARV[[1]] #oppure: banda1=raster(file.path, band = 2)
+banda1=RGB_stack_HARV[[2]]
+banda3=RGB_stack_HARV[[3]]
+
+banda1
+#class      : RasterLayer 
+#band       : 1  (of  3  bands)
+#dimensions : 2317, 3073, 7120141  (nrow, ncol, ncell)
+#resolution : 0.25, 0.25  (x, y)
+#extent     : 731998.5, 732766.8, 4712956, 4713536  (xmin, xmax, ymin, ymax)
+#crs        : +proj=utm +zone=18 +datum=WGS84 +units=m +no_defs 
+#source     : C:/WSL_folder/myCubeR/vignettes/test/HARV_RGB_Ortho.tif 
+#names      : HARV_RGB_Ortho.1 
+#values     : 0, 255  (min, max)
+
+plot(banda1)
+```
+<img src="images/banda1.png">
+
+
+```r
+## Per creare una immagine 
+plotRGB(RGB_stack_HARV, r = 1, g = 2, b = 3)
+```
+<img src="images/RGB_HARV.png">
