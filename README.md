@@ -12,6 +12,12 @@ Il pacchetto può essere importato in R come segue:
 library(devtools)
 devtools::install_github("ARPASMR/myCubeR@HEAD")
 ```
+NB. Per scaricare da GitHub non connettersi alla VPN.
+
+Una volta scaricato è possibile richiamarlo con
+```r
+library(MyCubeR)
+```
 
 ### Configurazione
 NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasdaman, ora http://10.10.0.28:8081/rasdaman/ows , è necessario aggiornare l'url all'iterno delle funzioni *getCapability* e *createWCS_URLs* definite nello script *R/coverage_metadata.R* .

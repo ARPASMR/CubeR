@@ -33,8 +33,8 @@ createWCS_URLs<-function(url=NULL,type){
   urlsmall<-str_split(url,"/")[[1]]
   urlsmall<-paste(urlsmall[1:3],"/",collapse = "") %>% str_replace_all(.," ","")
 
-  if(type=="Meta")  url2<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=DescribeCoverage&COVERAGEID=")
-  if(type=="Get") url2<-paste0(url,"?&SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=")
+  if(type=="Meta") url2<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=DescribeCoverage&COVERAGEID=")
+  if(type=="Get") url2<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=GetCoverage&COVERAGEID=")
   if(type=="Query") url2<-paste0(url,"?SERVICE=WCS&VERSION=2.0.1&REQUEST=ProcessCoverages&QUERY=")
 
   return(url2)
