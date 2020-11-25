@@ -22,6 +22,8 @@ navbar:
         href: articles/Get_Data_ita.html
       - text: "Elaborazione dei dati"
         href: articles/Process_Data_ita.html
+      - text: "ESEMPI PRATICI"
+        href: articles/Examples_ita.html
     - text: "Funzioni"
       href: reference/index.html
   right:

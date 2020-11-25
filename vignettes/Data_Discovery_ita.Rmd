@@ -5,7 +5,7 @@ description: >
   [DocSearch](https://community.algolia.com/docsearch/) from Algolia.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data_Discovery}
+  %\VignetteIndexEntry{Data_Discovery_ita}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

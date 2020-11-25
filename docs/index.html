@@ -59,6 +59,9 @@
     <li>
       <a href="articles/Process_Data_ita.html">Elaborazione dei dati</a>
     </li>
+    <li>
+      <a href="articles/Examples_ita.html">ESEMPI PRATICI</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -84,21 +87,36 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
+
 <div id="cuber---arpasmr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#cuber---arpasmr" class="anchor"></a>CubeR - ARPASMR</h1></div>
 <div id="un-pacchetto-r-per-accedere-ai-data-cubes-archiviati-in-rasdaman-tramite-servizi-wcs-and-wcps" class="section level2">
 <h2 class="hasAnchor">
 <a href="#un-pacchetto-r-per-accedere-ai-data-cubes-archiviati-in-rasdaman-tramite-servizi-wcs-and-wcps" class="anchor"></a>Un pacchetto R per accedere ai Data Cubes archiviati in Rasdaman tramite servizi WCS and WCPS.</h2>
-<p>Pacchetto R creato per l’accesso al database RASDAMAN dell’Agenzia sfruttandone i servizi OGC.</p>
-<p>Repository modificato a partire dal repository clonato <a href="https://github.com/mattia6690/CubeR">mattia6690/CubeR</a></p>
+<p>Pacchetto R creato per l’accesso al database RASDAMAN dell’Agenzia sfruttandone i servizi OGC. Repository modificato a partire dal repository <a href="https://github.com/mattia6690/CubeR">mattia6690/CubeR</a></p>
 <div id="installazione" class="section level3">
 <h3 class="hasAnchor">
 <a href="#installazione" class="anchor"></a>Installazione</h3>
-<p>The package can be directly imported in R by typing:</p>
+<p>Il pacchetto può essere importato in R come segue:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ARPASMR/myCubeR@head"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"ARPASMR/myCubeR@HEAD"</span><span class="op">)</span></code></pre></div>
+<p>NB. Per scaricare da GitHub non connettersi alla VPN.</p>
+<p>Una volta scaricato è possibile richiamarlo con</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">MyCubeR</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="configurazione" class="section level3">
+<h3 class="hasAnchor">
+<a href="#configurazione" class="anchor"></a>Configurazione</h3>
+<p>NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasdaman, ora <a href="http://10.10.0.28:8081/rasdaman/ows" class="uri">http://10.10.0.28:8081/rasdaman/ows</a> , è necessario aggiornare l’url all’iterno delle funzioni <em>getCapability</em> e <em>createWCS_URLs</em> definite nello script <em>R/coverage_metadata.R</em> .</p>
+</div>
+<div id="documentazione" class="section level3">
+<h3 class="hasAnchor">
+<a href="#documentazione" class="anchor"></a>Documentazione</h3>
+<p>Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, è possibile accedere alla documentazione o attarverso RStudio o aprendo la pagina <strong><em>/docs/index.html</em></strong>.</p>
 </div>
 <div id="utilizzo-e-funzionalità" class="section level3">
 <h3 class="hasAnchor">
@@ -113,13 +131,13 @@
 <h4 class="hasAnchor">
 <a href="#2-scaricamento-dei-dati" class="anchor"></a>2. Scaricamento dei dati</h4>
 <p>La funzione <code><a href="reference/get_coverage.html">get_coverage()</a></code> permette di scaricare una coverage o parte di essa fruttando la funzione <em>GetCoverage</em> dei servizi WCS.</p>
-<p>E’ stata creata poi una funzione particolare <code><a href="reference/image_from_coverage.html">image_from_coverage()</a></code> per scaricare in particolare immagini multibanda.</p>
+<p>E’ stata creata poi una funzione particolare <code><a href="reference/image_from_coverage.html">image_from_coverage()</a></code> per scaricare in particolare raster multibanda.</p>
 </div>
 <div id="3-elaborazione-dei-dati" class="section level4">
 <h4 class="hasAnchor">
 <a href="#3-elaborazione-dei-dati" class="anchor"></a>3. Elaborazione dei dati</h4>
-<p>La funzione <code><a href="reference/WPCS_query.html">WPCS_query()</a></code> permette di codificare una query passata in formato <em>rasql</em> (rasdaman Query Language), comporre l’url per inviare la richiesta del servizio secondo lo standard WCS OGC.</p>
-<p>Altre funzioni di processamento dei dati già implementate:</p>
+<p>La funzione <code><a href="reference/WPCS_query.html">WPCS_query()</a></code> permette, a partire da una query passata in formato <em>rasql</em> (rasdaman Query Language), di comporre ed inviare una richiesta secondo lo standard WCPS OGC e interpretare e scaricare la risposta del servizio.</p>
+<p>Funzioni di processamento dei dati già implementate “ad hoc”:</p>
 <ul>
 <li><code><a href="reference/pixel_history.html">pixel_history()</a></code></li>
 </ul>
@@ -127,6 +145,7 @@
 </div>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -154,7 +173,13 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=myCubeR"><img src="http://www.r-pkg.org/badges/version/myCubeR" alt="CRAN"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 

@@ -3,6 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   Data_Discovery_ita: Data_Discovery_ita.html
+  Examples_ita: Examples_ita.html
   Get_Data_ita: Get_Data_ita.html
   myCubeR: myCubeR.html
   Process_Data_ita: Process_Data_ita.html
@@ -11,5 +12,5 @@ articles:
   test/output: output.html
   test/pdf: pdf.pdf
   test/rendering: rendering.html
-last_built: 2020-11-23T19:08Z
+last_built: 2020-11-25T09:49Z
 
