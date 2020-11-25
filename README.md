@@ -1,5 +1,6 @@
 [![CRAN](http://www.r-pkg.org/badges/version/myCubeR)](https://cran.r-project.org/package=myCubeR)
 
+
 # CubeR - ARPASMR
 ## Un pacchetto R per accedere ai Data Cubes archiviati in Rasdaman tramite servizi WCS and WCPS.
 
@@ -23,7 +24,12 @@ library(MyCubeR)
 NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasdaman, ora http://10.10.0.28:8081/rasdaman/ows , è necessario aggiornare l'url all'iterno delle funzioni *getCapability* e *createWCS_URLs* definite nello script *R/coverage_metadata.R* .
 
 ### Documentazione
-Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, è possibile accedere alla documentazione o attarverso RStudio o aprendo la pagina ***/docs/index.html***.
+Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, è possibile accedere alla documentazione:
+
+* ONLINE - Grazie alle **GitHub Pages di ARPASMR: [https://arpasmr.github.io/myCubeR/](https://arpasmr.github.io/myCubeR/)**
+* DA DESKTOP - Scaricando il pacchetto e aprendo la pagina ***/docs/index.html***
+* DA RStudio <a href="man/figures/Rstudio_doc1.png">Rstudio_doc1.png</a> <a href="man/figures/Rstudio_doc2.png">Rstudio_doc2.png</a>
+
 
 ### Utilizzo e funzionalità
 Questo pacchetto offre le seguenti diverse possibilità per interagire con i Data Cubes:
@@ -42,3 +48,6 @@ La funzione `WPCS_query()` permette, a partire da una query passata in formato *
 
 Funzioni di processamento dei dati già implementate "ad hoc":
 - `pixel_history()`
+
+
+<img style="width: 250px;" src="man/figures/logo-ARPA-Lombardia.svg">
