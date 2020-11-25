@@ -26,7 +26,8 @@ NB Nel caso in cui dovesse cambiasse la root principale dei servizi OGC di Rasda
 ### Documentazione
 Oltre a quanto illustrato brevemente di seguito, una volta scaricato il pacchetto, è possibile accedere alla documentazione:
 
-* ONLINE - Grazie alle **GitHub Pages di ARPASMR: [https://arpasmr.github.io/myCubeR/](https://arpasmr.github.io/myCubeR/)**
+* :star2: ONLINE - Grazie alle **GitHub Pages di ARPASMR: [https://arpasmr.github.io/myCubeR/](https://arpasmr.github.io/myCubeR/)**
+    
 * DA DESKTOP - Scaricando il pacchetto e aprendo la pagina ***/docs/index.html***
 * DA RStudio <a href="man/figures/Rstudio_doc1.png">Rstudio_doc1.png</a> <a href="man/figures/Rstudio_doc2.png">Rstudio_doc2.png</a>
 
