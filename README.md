@@ -1,7 +1,7 @@
 [![CRAN](http://www.r-pkg.org/badges/version/myCubeR)](https://cran.r-project.org/package=myCubeR)
 
 
-# CubeR - ARPASMR
+# MyCubeR - ARPASMR
 ## Un pacchetto R per accedere ai Data Cubes archiviati in Rasdaman tramite servizi WCS and WCPS.
 
 Pacchetto R creato per l'accesso al database RASDAMAN dell'Agenzia sfruttandone i servizi OGC. 
