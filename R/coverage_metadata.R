@@ -64,7 +64,6 @@ coverage_get_coordsys <- function(desc_url = NULL, coverage){
     unlist()
 
   return(axes)
-
 }
 
 #' @title Get EPSG identifier
@@ -163,9 +162,7 @@ coverage_get_bounding_box <- function(desc_url=NULL, coverage){
   s_extent_ymax = str_split(xml_text(s_extent[2]), " ") %>% unlist() %>% .[3]
 
   BB <- c(s_extent_xmin, s_extent_xmax, s_extent_ymin, s_extent_ymax)
-
   return(BB)
-
 }
 
 #' @title Get Timestamps

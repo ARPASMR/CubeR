@@ -36,6 +36,8 @@ Script R:
 ## 1. Caricamento della libreria MyCubeR
 library(myCubeR)
 library(raster)
+library(tmap) #install.packages("tmap")
+#library(tmaptools)
 
 ## 2. Connettersi alla VPN per collegarsi a Rasdaman
 # Elenco delle coverage disponibili
@@ -148,18 +150,29 @@ write.table(tmp, file="C:\\WSL_folder\\combinedPointValue.csv", sep= ";")
 #figure=paste0("C:\\WSL_folder\\",name,".png")
 #png(figure)
 
-# make plot
 rstr_finale=raster_gg
-library(tmap)
-#library(tmaptools)
+
+#Creazione delle isolinee da aggiungere al grafico
+rc <- rasterToContour(rstr_finale)
+
+#Assegno il sistema di riferimento WGS84-UTM32N
+proj4string(rstr_finale) <- CRS("+init=epsg:32632")
+
+#Creo il grafico. La documentazione della libreria tmap è disponibile qui: https://cran.r-project.org/web/packages/tmap/tmap.pdf
 tm_shape=tmap::tm_shape
 tm_raster=tmap::tm_raster
 tm_legend=tmap::tm_legend
 tm_lines=tmap::tm_lines
 tm_text=tmap::tm_text
+
+#figure=paste0("C:\\WSL_folder\\",name,".png")
+#png(figure)
+
+# make plot
 tm_shape(rstr_finale) + tm_raster(style= "cont", palette = "-RdYlBu", title = paste("Tmedia del ",day,"\n (°C)"), interpolate = TRUE) + 
   tm_shape(rc) + tm_lines(col = "black", text = "level", breaks = rc$level, labels = as.character(rc$level)) + 
   tm_text("level", col = "white", size = 1.0) + tm_legend(outside = TRUE)
+  
 ```
 <img src="images/tm_shape_MZ.png">
 
